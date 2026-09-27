@@ -9874,6 +9874,8 @@ break A}if("operation-not-allowed"===s){r="This sign-in method is not enabled fo
 break A}if("too-many-requests"===s){r="Too many attempts. Wait a moment, then try again."
 break A}if(q===s){r=p
 break A}if("popup-closed-by-user"===s||"cancelled-popup-request"===s){r="Google sign-in was cancelled."
+break A}if("unauthorized-domain"===s){r="This website is not authorized for Google sign-in. Add its domain in Firebase Authentication settings."
+break A}if("popup-blocked"===s){r="Your browser blocked the Google sign-in popup. Allow popups for Doeet and try again."
 break A}if("account-exists-with-different-credential"===s){r="This email is registered with a different sign-in method."
 break A}r="Authentication failed. Please try again."
 break A}return r}if(a instanceof A.wg&&a.c===q)return p
