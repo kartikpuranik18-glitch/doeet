@@ -1,0 +1,18 @@
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "flutter": {
+    "platforms": {
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "doeetapp-c1e87",
+          "configurations": {
+            "web": "1:346143954303:web:1b6fc64287d7cde68ff64a"
+          }
+        }
+      }
+    }
+  }
+}

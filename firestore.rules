@@ -1,0 +1,88 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Users ──────────────────────────────────────────────────────────────
+    match /users/{userId} {
+      // User can read/write their own document
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+
+      // Daily stats sub-collection
+      match /dailyStats/{dateKey} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+
+    // ── Courses ────────────────────────────────────────────────────────────
+    match /users/{userId}/courses/{courseId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+
+      // Video progress sub-collection
+      match /videos/{videoId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+
+    // ── Notes ──────────────────────────────────────────────────────────────
+    match /users/{userId}/notes/{noteId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Tasks and progress belong to a single authenticated user.
+    match /users/{userId}/tasks/{taskId} {
+      allow read, delete: if request.auth != null && request.auth.uid == userId;
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.data.title is string
+        && request.resource.data.title.size() > 0
+        && request.resource.data.title.size() <= 240
+        && request.resource.data.dueAt is timestamp
+        && request.resource.data.isCompleted is bool;
+    }
+
+    match /users/{userId}/goals/{goalId} {
+      allow read, delete: if request.auth != null && request.auth.uid == userId;
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.data.title is string
+        && request.resource.data.title.size() > 0
+        && request.resource.data.title.size() <= 180
+        && request.resource.data.progress is int
+        && request.resource.data.progress >= 0
+        && request.resource.data.target is int
+        && request.resource.data.target > 0;
+    }
+
+    match /users/{userId}/habits/{habitId} {
+      allow read, delete: if request.auth != null && request.auth.uid == userId;
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.data.title is string
+        && request.resource.data.title.size() > 0
+        && request.resource.data.title.size() <= 120
+        && request.resource.data.completedDates is list;
+    }
+
+    // Only this deliberately public projection is used by the leaderboard.
+    // Private account fields remain in users/{userId} and are never exposed.
+    match /leaderboard/{userId} {
+      allow read: if request.auth != null;
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.data.uid == userId
+        && request.resource.data.keys().hasOnly([
+          'uid', 'displayName', 'photoURL', 'xp', 'level', 'streak'
+        ])
+        && request.resource.data.displayName is string
+        && request.resource.data.xp is int
+        && request.resource.data.level is int
+        && request.resource.data.streak is int;
+      allow delete: if false;
+    }
+
+    // Deny all other access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
