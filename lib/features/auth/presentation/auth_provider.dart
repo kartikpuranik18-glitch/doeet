@@ -25,6 +25,10 @@ String authErrorMessage(Object error) {
       'popup-closed-by-user' ||
       'cancelled-popup-request' =>
         'Google sign-in was cancelled.',
+      'unauthorized-domain' =>
+        'This website is not authorized for Google sign-in. Add its domain in Firebase Authentication settings.',
+      'popup-blocked' =>
+        'Your browser blocked the Google sign-in popup. Allow popups for Doeet and try again.',
       'account-exists-with-different-credential' =>
         'This email is registered with a different sign-in method.',
       _ => 'Authentication failed. Please try again.',
