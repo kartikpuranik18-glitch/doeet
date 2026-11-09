@@ -64,6 +64,12 @@ class AuthRepository {
   Future<void> _refreshLeaderboardEntry(UserModel user) =>
       _publicLeaderboardDoc(user.uid).set(_leaderboardData(user));
 
+  /// Role assignment remains server-controlled; this updates only a selected
+  /// workspace after Firestore rules verify the member has access.
+  Future<void> setActiveWorkspace(String uid, String workspace) async {
+    await _userDoc(uid).update({'activeWorkspace': workspace});
+  }
+
   Future<UserModel?> fetchUserModel(String uid) async {
     final doc = await _userDoc(uid).get();
 

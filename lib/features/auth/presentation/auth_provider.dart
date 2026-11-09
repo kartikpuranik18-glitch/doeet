@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../data/auth_repository.dart';
 import '../data/user_model.dart';
+import '../data/user_role.dart';
 
 /// Converts Firebase/plugin failures into short messages suitable for the UI.
 String authErrorMessage(Object error) {
@@ -117,6 +118,13 @@ class AuthNotifier extends StateNotifier<AsyncValue<void>> {
   Future<void> sendPasswordReset(String email) async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() => _repo.sendPasswordReset(email));
+  }
+
+  Future<void> setActiveWorkspace(String uid, WorkspaceKind workspace) async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(
+      () => _repo.setActiveWorkspace(uid, workspace.name),
+    );
   }
 }
 

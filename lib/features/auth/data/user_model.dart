@@ -1,5 +1,6 @@
 // lib/features/auth/data/user_model.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'user_role.dart';
 
 /// Firestore-backed user model with gamification fields
 class UserModel {
@@ -17,6 +18,8 @@ class UserModel {
   final DateTime joinedAt;
   final bool isPremium;
   final List<String> categories; // user-selected interests
+  final List<UserRole> roles;
+  final WorkspaceKind activeWorkspace;
 
   const UserModel({
     required this.uid,
@@ -33,6 +36,8 @@ class UserModel {
     required this.joinedAt,
     this.isPremium = false,
     this.categories = const [],
+    this.roles = const [UserRole.learner],
+    this.activeWorkspace = WorkspaceKind.learner,
   });
 
   /// Firestore → Model
@@ -53,6 +58,15 @@ class UserModel {
       joinedAt: (map['joinedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       isPremium: map['isPremium'] as bool? ?? false,
       categories: List<String>.from(map['categories'] ?? []),
+      roles: (map['roles'] as List<dynamic>? ?? const ['learner'])
+          .map((role) => UserRole.fromValue(role as String?))
+          .toSet()
+          .toList(),
+      activeWorkspace: switch (map['activeWorkspace'] as String?) {
+        'company' => WorkspaceKind.company,
+        'administration' => WorkspaceKind.administration,
+        _ => WorkspaceKind.learner,
+      },
     );
   }
 
@@ -74,6 +88,8 @@ class UserModel {
       'joinedAt': Timestamp.fromDate(joinedAt),
       'isPremium': isPremium,
       'categories': categories,
+      'roles': roles.map((role) => role.value).toList(),
+      'activeWorkspace': activeWorkspace.name,
     };
   }
 
@@ -89,6 +105,8 @@ class UserModel {
     DateTime? lastActiveDate,
     bool? isPremium,
     List<String>? categories,
+    List<UserRole>? roles,
+    WorkspaceKind? activeWorkspace,
   }) {
     return UserModel(
       uid: uid,
@@ -105,6 +123,8 @@ class UserModel {
       joinedAt: joinedAt,
       isPremium: isPremium ?? this.isPremium,
       categories: categories ?? this.categories,
+      roles: roles ?? this.roles,
+      activeWorkspace: activeWorkspace ?? this.activeWorkspace,
     );
   }
 
@@ -134,4 +154,10 @@ class UserModel {
 
   /// Greeting based on display name
   String get firstName => displayName.split(' ').first;
+
+  bool canUse(WorkspaceKind workspace) => switch (workspace) {
+        WorkspaceKind.learner => roles.any((role) => role.canUseLearnerWorkspace),
+        WorkspaceKind.company => roles.any((role) => role.canUseCompanyWorkspace),
+        WorkspaceKind.administration => roles.any((role) => role.canUseAdministration),
+      };
 }

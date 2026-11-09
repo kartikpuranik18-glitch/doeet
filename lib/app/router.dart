@@ -24,6 +24,8 @@ import '../features/gamification/presentation/badges_screen.dart';
 import '../features/analytics/presentation/analytics_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
 import '../features/workspace/presentation/workspace_screens.dart';
+import '../features/workspace/presentation/role_workspace_screen.dart';
+import '../features/auth/data/user_role.dart';
 import 'main_scaffold.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -93,6 +95,23 @@ final routerProvider = Provider<GoRouter>((ref) {
               builder: (_, __) => const LeaderboardScreen()),
           GoRoute(path: '/badges', builder: (_, __) => const BadgesScreen()),
         ],
+      ),
+
+      // Company and admin routes are deliberately outside the learner shell.
+      GoRoute(
+        path: '/workspace/learner',
+        builder: (_, __) =>
+            const RoleWorkspaceScreen(workspace: WorkspaceKind.learner),
+      ),
+      GoRoute(
+        path: '/workspace/company',
+        builder: (_, __) =>
+            const RoleWorkspaceScreen(workspace: WorkspaceKind.company),
+      ),
+      GoRoute(
+        path: '/workspace/admin',
+        builder: (_, __) => const RoleWorkspaceScreen(
+            workspace: WorkspaceKind.administration),
       ),
 
       // ── Course flows ───────────────────────────────────────────────────────
