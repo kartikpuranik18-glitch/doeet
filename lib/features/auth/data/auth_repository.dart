@@ -3,7 +3,6 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 import 'user_model.dart';
 
@@ -11,17 +10,11 @@ import 'user_model.dart';
 class AuthRepository {
   final FirebaseAuth _auth;
   final FirebaseFirestore _firestore;
-  final GoogleSignIn? _googleSignIn;
-
   AuthRepository({
     FirebaseAuth? auth,
     FirebaseFirestore? firestore,
-    GoogleSignIn? googleSignIn,
   })  : _auth = auth ?? FirebaseAuth.instance,
-        _firestore = firestore ?? FirebaseFirestore.instance,
-        _googleSignIn = kIsWeb
-            ? null
-            : (googleSignIn ?? GoogleSignIn());
+        _firestore = firestore ?? FirebaseFirestore.instance;
 
   // ─────────────────────────────────────────────────
   // Auth State
@@ -162,28 +155,9 @@ class AuthRepository {
   // ─────────────────────────────────────────────────
 
   Future<UserModel> signInWithGoogle() async {
-    // Firebase's Web popup uses the OAuth provider configured in Firebase and
-    // does not require a separate GoogleSignIn client ID in index.html.
-    final UserCredential userCredential;
-    if (kIsWeb) {
-      userCredential = await _auth.signInWithPopup(GoogleAuthProvider());
-    } else {
-      final googleUser = await _googleSignIn?.signIn();
-
-      if (googleUser == null) {
-        throw FirebaseAuthException(
-          code: 'popup-closed-by-user',
-          message: 'Google sign-in was cancelled.',
-        );
-      }
-
-      final googleAuth = await googleUser.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-      userCredential = await _auth.signInWithCredential(credential);
-    }
+    final UserCredential userCredential = kIsWeb
+        ? await _auth.signInWithPopup(GoogleAuthProvider())
+        : await _auth.signInWithProvider(GoogleAuthProvider());
 
     // UserCredential already provides the `user` property.
     final firebaseUser = userCredential.user;
@@ -259,13 +233,6 @@ class AuthRepository {
   Future<void> signOut() async {
     // Signing out of Firebase must still work if the native Google plugin
     // cannot clear its cached account state.
-    if (!kIsWeb) {
-      try {
-        await _googleSignIn?.signOut();
-      } catch (_) {
-        // Firebase remains the source of truth for the app session.
-      }
-    }
     await _auth.signOut();
   }
 
