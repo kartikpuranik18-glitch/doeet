@@ -171,6 +171,18 @@ service cloud.firestore {
         && hasAnyRole(['platform_admin']);
     }
 
+    match /companyAccessRequests/{uid} {
+      allow read: if request.auth != null
+        && (request.auth.uid == uid || hasAnyRole(['platform_admin']));
+      allow create, update, delete: if false;
+    }
+
+    match /auditLogs/{logId} {
+      allow read: if request.auth != null
+        && hasAnyRole(['platform_admin']);
+      allow create, update, delete: if false;
+    }
+
     // Deny all other access
     match /{document=**} {
       allow read, write: if false;

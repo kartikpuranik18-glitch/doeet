@@ -26,6 +26,9 @@ import '../features/settings/presentation/settings_screen.dart';
 import '../features/workspace/presentation/workspace_screens.dart';
 import '../features/workspace/presentation/role_workspace_screen.dart';
 import '../features/auth/data/user_role.dart';
+import '../features/career/presentation/career_screen.dart';
+import '../features/career/presentation/certificate_verification_screen.dart';
+import '../features/company/presentation/company_screen.dart';
 import 'main_scaffold.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -42,9 +45,11 @@ final routerProvider = Provider<GoRouter>((ref) {
           state.matchedLocation.startsWith('/register') ||
           state.matchedLocation.startsWith('/onboarding');
       final isOnSplash = state.matchedLocation == '/splash';
+      final isPublicCertificate =
+          state.matchedLocation.startsWith('/certificate/');
 
       if (isOnSplash) return null;
-      if (!isLoggedIn && !isOnAuth) return '/onboarding';
+      if (!isLoggedIn && !isOnAuth && !isPublicCertificate) return '/onboarding';
       if (isLoggedIn && isOnAuth) return '/home';
       return null;
     },
@@ -94,9 +99,20 @@ final routerProvider = Provider<GoRouter>((ref) {
               path: '/leaderboard',
               builder: (_, __) => const LeaderboardScreen()),
           GoRoute(path: '/badges', builder: (_, __) => const BadgesScreen()),
+          GoRoute(path: '/career', builder: (_, __) => const CareerScreen()),
         ],
       ),
 
+      GoRoute(
+        path: '/certificate/:certificateId',
+        builder: (_, state) => CertificateVerificationScreen(
+          certificateId: state.pathParameters['certificateId']!,
+        ),
+      ),
+      GoRoute(
+        path: '/company',
+        builder: (_, __) => const CompanyScreen(),
+      ),
       // Company and admin routes are deliberately outside the learner shell.
       GoRoute(
         path: '/workspace/learner',

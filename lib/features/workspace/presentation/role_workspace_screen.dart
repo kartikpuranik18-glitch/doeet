@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../auth/data/user_role.dart';
@@ -28,6 +29,8 @@ class RoleWorkspaceScreen extends ConsumerWidget {
             message: workspace == WorkspaceKind.company
                 ? 'Company and recruiter tools are available only after company verification and role approval.'
                 : 'This workspace requires an approved DOEET role.',
+            uid: profile?.uid,
+            canRequestCompanyRole: workspace == WorkspaceKind.company,
           );
         }
         return _WorkspaceHome(workspace: workspace, uid: profile.uid);
@@ -51,6 +54,7 @@ class _WorkspaceHome extends ConsumerWidget {
             _WorkspaceLink('Learning dashboard', Icons.school_outlined, '/home'),
             _WorkspaceLink('Courses & playlists', Icons.play_circle_outline, '/courses'),
             _WorkspaceLink('Learning progress', Icons.trending_up_outlined, '/analytics'),
+            _WorkspaceLink('Career & applications', Icons.work_outline, '/career'),
           ],
         ),
       WorkspaceKind.company => (
@@ -58,8 +62,8 @@ class _WorkspaceHome extends ConsumerWidget {
           'Post verified roles, review consented evidence, and run a fair hiring pipeline.',
           <_WorkspaceLink>[
             _WorkspaceLink('Company profile', Icons.business_outlined, '/workspace/company'),
-            _WorkspaceLink('Jobs & hiring pipeline', Icons.work_outline, '/workspace/company'),
-            _WorkspaceLink('Talent search', Icons.manage_search_outlined, '/workspace/company'),
+            _WorkspaceLink('Jobs & hiring pipeline', Icons.work_outline, '/company'),
+            _WorkspaceLink('Talent search', Icons.manage_search_outlined, '/company'),
           ],
         ),
       WorkspaceKind.administration => (
@@ -114,9 +118,16 @@ class _WorkspaceHome extends ConsumerWidget {
 }
 
 class _AccessState extends StatelessWidget {
-  const _AccessState({required this.title, required this.message});
+  const _AccessState({
+    required this.title,
+    required this.message,
+    this.uid,
+    this.canRequestCompanyRole = false,
+  });
   final String title;
   final String message;
+  final String? uid;
+  final bool canRequestCompanyRole;
   @override
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: AppColors.bg,
@@ -136,6 +147,32 @@ class _AccessState extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: const TextStyle(color: AppColors.textSecondary)),
               const SizedBox(height: 16),
+              if (canRequestCompanyRole)
+                FilledButton.icon(
+                  onPressed: () async {
+                    try {
+                      await FirebaseFunctions.instance
+                          .httpsCallable('requestCompanyAccess')
+                          .call({'role': 'employer'});
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'Company access request submitted for review.',
+                          ),
+                        ),
+                      );
+                    } catch (error) {
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(error.toString())),
+                      );
+                    }
+                  },
+                  icon: const Icon(Icons.verified_user_outlined),
+                  label: const Text('Request company access'),
+                ),
+              if (canRequestCompanyRole) const SizedBox(height: 10),
               OutlinedButton(
                   onPressed: () => context.go('/home'),
                   child: const Text('Return to DOEET')),
