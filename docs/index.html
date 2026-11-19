@@ -38,28 +38,20 @@
 <body>
   <script>
     (function () {
-      var resetKey = "doeet-cache-reset-2026-11-20";
-      if ("serviceWorker" in navigator &&
-          !sessionStorage.getItem(resetKey)) {
-        sessionStorage.setItem(resetKey, "1");
-        navigator.serviceWorker.getRegistrations()
-          .then(function (registrations) {
-            return Promise.all(registrations.map(function (registration) {
-              return registration.unregister();
-            }));
-          })
-          .then(function () {
-            if ("caches" in window) {
-              return caches.keys().then(function (keys) {
-                return Promise.all(keys.map(function (key) {
-                  return caches.delete(key);
-                }));
-              });
-            }
-          })
-          .then(function () {
-            window.location.reload();
-          });
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function (registrations) {
+          return Promise.all(registrations.map(function (registration) {
+            return registration.unregister();
+          }));
+        }).then(function () {
+          if ("caches" in window) {
+            return caches.keys().then(function (keys) {
+              return Promise.all(keys.map(function (key) {
+                return caches.delete(key);
+              }));
+            });
+          }
+        }).catch(function () {});
       }
     })();
   </script>

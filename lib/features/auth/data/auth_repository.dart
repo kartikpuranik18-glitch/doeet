@@ -11,7 +11,7 @@ import 'user_model.dart';
 class AuthRepository {
   final FirebaseAuth _auth;
   final FirebaseFirestore _firestore;
-  final GoogleSignIn _googleSignIn;
+  final GoogleSignIn? _googleSignIn;
 
   AuthRepository({
     FirebaseAuth? auth,
@@ -19,7 +19,9 @@ class AuthRepository {
     GoogleSignIn? googleSignIn,
   })  : _auth = auth ?? FirebaseAuth.instance,
         _firestore = firestore ?? FirebaseFirestore.instance,
-        _googleSignIn = googleSignIn ?? GoogleSignIn();
+        _googleSignIn = kIsWeb
+            ? null
+            : (googleSignIn ?? GoogleSignIn());
 
   // ─────────────────────────────────────────────────
   // Auth State
@@ -166,7 +168,7 @@ class AuthRepository {
     if (kIsWeb) {
       userCredential = await _auth.signInWithPopup(GoogleAuthProvider());
     } else {
-      final googleUser = await _googleSignIn.signIn();
+      final googleUser = await _googleSignIn?.signIn();
 
       if (googleUser == null) {
         throw FirebaseAuthException(
@@ -259,7 +261,7 @@ class AuthRepository {
     // cannot clear its cached account state.
     if (!kIsWeb) {
       try {
-        await _googleSignIn.signOut();
+        await _googleSignIn?.signOut();
       } catch (_) {
         // Firebase remains the source of truth for the app session.
       }
