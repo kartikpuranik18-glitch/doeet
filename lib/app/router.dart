@@ -28,6 +28,8 @@ import '../features/workspace/presentation/role_workspace_screen.dart';
 import '../features/auth/data/user_role.dart';
 import '../features/career/presentation/career_screen.dart';
 import '../features/career/presentation/certificate_verification_screen.dart';
+import '../features/learning_paths/presentation/learning_paths_screen.dart';
+import '../features/ai/presentation/ai_notes_screen.dart';
 import '../features/company/presentation/company_screen.dart';
 import 'main_scaffold.dart';
 
@@ -100,6 +102,12 @@ final routerProvider = Provider<GoRouter>((ref) {
               builder: (_, __) => const LeaderboardScreen()),
           GoRoute(path: '/badges', builder: (_, __) => const BadgesScreen()),
           GoRoute(path: '/career', builder: (_, __) => const CareerScreen()),
+          GoRoute(
+              path: '/learning-paths',
+              builder: (_, __) => const LearningPathsScreen()),
+          GoRoute(
+              path: '/ai-notes',
+              builder: (_, __) => const AiNotesScreen()),
         ],
       ),
 
@@ -108,6 +116,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, state) => CertificateVerificationScreen(
           certificateId: state.pathParameters['certificateId']!,
         ),
+      ),
+      GoRoute(
+        path: '/learning-path/:pathId',
+        builder: (_, state) =>
+            LearningPathDetailScreen(pathId: state.pathParameters['pathId']!),
       ),
       GoRoute(
         path: '/company',

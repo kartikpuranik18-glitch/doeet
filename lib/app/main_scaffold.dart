@@ -24,12 +24,14 @@ class MainScaffold extends StatelessWidget {
   ];
   static const _workspaceItems = <_NavItem>[
     _NavItem('Learn', Icons.play_circle_outline_rounded, '/courses'),
+    _NavItem('Paths', Icons.route_outlined, '/learning-paths'),
     _NavItem('Dashboard', Icons.space_dashboard_outlined, '/home'),
     _NavItem('Career', Icons.work_outline_rounded, '/career'),
     _NavItem('Calendar', Icons.calendar_month_outlined, '/calendar'),
     _NavItem('Daily Tasks', Icons.checklist_rounded, '/tasks'),
     _NavItem('Goals', Icons.flag_outlined, '/goals'),
     _NavItem('Notes', Icons.sticky_note_2_outlined, '/notes'),
+    _NavItem('AI Notes', Icons.auto_awesome_outlined, '/ai-notes'),
     _NavItem('Habits', Icons.local_fire_department_outlined, '/habits'),
     _NavItem('Analytics', Icons.insights_outlined, '/analytics'),
     _NavItem('Achievements', Icons.emoji_events_outlined, '/badges'),
