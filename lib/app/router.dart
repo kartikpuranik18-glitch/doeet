@@ -28,9 +28,8 @@ import '../features/workspace/presentation/role_workspace_screen.dart';
 import '../features/auth/data/user_role.dart';
 import '../features/career/presentation/career_screen.dart';
 import '../features/career/presentation/certificate_verification_screen.dart';
-import '../features/learning_paths/presentation/learning_paths_screen.dart';
-import '../features/ai/presentation/ai_notes_screen.dart';
 import '../features/company/presentation/company_screen.dart';
+import '../features/learning/presentation/learning_hub_screen.dart';
 import 'main_scaffold.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -68,6 +67,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state, child) => MainScaffold(child: child),
         routes: [
           GoRoute(path: '/home', builder: (_, __) => const HomeScreen()),
+          GoRoute(path: '/learn', builder: (_, __) => const LearningHubScreen()),
           GoRoute(path: '/courses', builder: (_, __) => const CoursesScreen()),
           GoRoute(
               path: '/analytics', builder: (_, __) => const AnalyticsScreen()),
@@ -101,13 +101,6 @@ final routerProvider = Provider<GoRouter>((ref) {
               path: '/leaderboard',
               builder: (_, __) => const LeaderboardScreen()),
           GoRoute(path: '/badges', builder: (_, __) => const BadgesScreen()),
-          GoRoute(path: '/career', builder: (_, __) => const CareerScreen()),
-          GoRoute(
-              path: '/learning-paths',
-              builder: (_, __) => const LearningPathsScreen()),
-          GoRoute(
-              path: '/ai-notes',
-              builder: (_, __) => const AiNotesScreen()),
         ],
       ),
 
@@ -118,13 +111,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         ),
       ),
       GoRoute(
-        path: '/learning-path/:pathId',
-        builder: (_, state) =>
-            LearningPathDetailScreen(pathId: state.pathParameters['pathId']!),
-      ),
-      GoRoute(
         path: '/company',
         builder: (_, __) => const CompanyScreen(),
+      ),
+      // Employment remains a separate product path: it does not use the
+      // learning shell, learner navigation, or learning profile UI.
+      GoRoute(
+        path: '/career',
+        builder: (_, __) => const CareerScreen(),
       ),
       // Company and admin routes are deliberately outside the learner shell.
       GoRoute(
