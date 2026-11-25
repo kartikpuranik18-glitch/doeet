@@ -15,7 +15,11 @@ service cloud.firestore {
     }
 
     function hasValidWorkspaceSelection() {
-      return request.resource.data.activeWorkspace == 'learner'
+      // Legacy DOEET profiles predate workspaces. They remain valid learners
+      // until the next authenticated profile migration writes these fields.
+      return (!('roles' in request.resource.data)
+          && !('activeWorkspace' in request.resource.data))
+        || request.resource.data.activeWorkspace == 'learner'
         || (request.resource.data.activeWorkspace == 'company'
           && request.resource.data.roles.hasAny([
             'employer', 'recruiter', 'agency', 'institution', 'company_admin'
@@ -181,82 +185,6 @@ service cloud.firestore {
       allow read: if request.auth != null
         && hasAnyRole(['platform_admin']);
       allow create, update, delete: if false;
-    }
-
-    // ── AI Interactions (mentor chat) ─────────────────────────────────
-    match /users/{userId}/aiInteractions/{chatId} {
-      allow read, write: if request.auth != null
-        && request.auth.uid == userId;
-      match /messages/{messageId} {
-        allow read, write: if request.auth != null
-          && request.auth.uid == userId;
-      }
-    }
-
-    // ── Assessment attempts ───────────────────────────────────────────
-    match /users/{userId}/courses/{courseId}/assessmentAttempts/{attemptId} {
-      allow read, write: if request.auth != null
-        && request.auth.uid == userId;
-    }
-
-    // ── Final assessment result (written server-side only) ───────────
-    match /users/{userId}/courses/{courseId}/finalAssessment/{doc} {
-      allow read: if request.auth != null
-        && request.auth.uid == userId;
-      allow write: if false;
-    }
-
-    // ── Enrolled learning paths ──────────────────────────────────────
-    match /users/{userId}/enrolledPaths/{pathId} {
-      allow read, write: if request.auth != null
-        && request.auth.uid == userId;
-    }
-
-    // ── Learning paths catalogue (admin writes, any auth reads) ──────
-    match /learningPaths/{pathId} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null
-        && hasAnyRole(['platform_admin']);
-    }
-
-    // ── Talent pool (denormalized public projection, server-write only) ──
-    match /talentPool/{uid} {
-      allow read: if request.auth != null
-        && hasAnyRole(['employer', 'recruiter', 'agency', 'institution', 'company_admin', 'platform_admin']);
-      allow write: if false; // written by Cloud Functions only
-    }
-
-    // ── Candidate offers (mirror on user side) ────────────────────────
-    match /users/{userId}/offers/{offerId} {
-      allow read: if request.auth != null
-        && request.auth.uid == userId;
-      allow write: if false; // written by Cloud Functions only
-    }
-
-    // ── Candidate interviews (mirror on user side) ─────────────────────
-    match /users/{userId}/interviews/{interviewId} {
-      allow read: if request.auth != null
-        && request.auth.uid == userId;
-      allow write: if false; // written by Cloud Functions only
-    }
-
-    // ── Company applications (sub-collections) ─────────────────────────
-    match /companies/{companyId}/applications/{appId}/interviews/{interviewId} {
-      allow read: if request.auth != null
-        && isCompanyManager(companyId);
-      allow write: if false; // written by Cloud Functions only
-    }
-    match /companies/{companyId}/applications/{appId}/offers/{offerId} {
-      allow read: if request.auth != null
-        && isCompanyManager(companyId);
-      allow write: if false; // written by Cloud Functions only
-    }
-
-    // ── Company employees ─────────────────────────────────────────────
-    match /companies/{companyId}/employees/{employeeUid} {
-      allow read: if request.auth != null
-        && isCompanyManager(companyId);
-      allow write: if false; // written by Cloud Functions only
     }
 
     // Deny all other access
