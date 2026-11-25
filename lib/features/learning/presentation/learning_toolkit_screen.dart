@@ -141,5 +141,18 @@ class _FeatureTile extends StatelessWidget {
   const _FeatureTile({required this.icon, required this.title, required this.detail, required this.tag});
   final IconData icon; final String title; final String detail; final String tag;
   @override
-  Widget build(BuildContext context) => Padding(padding: const EdgeInsets.only(bottom: 12), child: Container(padding: const EdgeInsets.all(18), decoration: BoxDecoration(color: AppColors.bgCard, borderRadius: BorderRadius.circular(15), border: Border.all(color: AppColors.border)), child: Row(children: [Container(width: 43, height: 43, decoration: BoxDecoration(color: AppColors.bgElevated, borderRadius: BorderRadius.circular(12)), child: Icon(icon, color: AppColors.primary)), const SizedBox(width: 14), Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(title, style: const TextStyle(fontWeight: FontWeight.w800)), const SizedBox(height: 4), Text(detail, style: const TextStyle(color: AppColors.textSecondary, fontSize: 13))])), const SizedBox(width: 12), Text(tag, style: const TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.w800))]))));
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: Container(
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(color: AppColors.bgCard, borderRadius: BorderRadius.circular(15), border: Border.all(color: AppColors.border)),
+          child: Row(children: [
+            Container(width: 43, height: 43, decoration: BoxDecoration(color: AppColors.bgElevated, borderRadius: BorderRadius.circular(12)), child: Icon(icon, color: AppColors.primary)),
+            const SizedBox(width: 14),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(title, style: const TextStyle(fontWeight: FontWeight.w800)), const SizedBox(height: 4), Text(detail, style: const TextStyle(color: AppColors.textSecondary, fontSize: 13))])),
+            const SizedBox(width: 12),
+            Text(tag, style: const TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.w800)),
+          ]),
+        ),
+      );
 }
