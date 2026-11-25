@@ -13,132 +13,47 @@ class CourseCard extends StatelessWidget {
     return GestureDetector(
       onTap: () => context.go('/course/${course.id}'),
       child: Container(
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: AppColors.bgCard,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(10),
           border: Border.all(color: AppColors.border),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
-            // ── Thumbnail ──────────────────────────────
-            Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                  child: course.thumbnailUrl.isNotEmpty
-                      ? Image.network(
-                          course.thumbnailUrl,
-                          height: 140,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => _thumbPlaceholder(),
-                        )
-                      : _thumbPlaceholder(),
-                ),
-                // Progress overlay pill
-                if (course.progress > 0)
-                  Positioned(
-                    bottom: 8,
-                    right: 8,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.75),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        '${course.progressPercent}%',
-                        style: const TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.primary,
-                        ),
-                      ),
-                    ),
-                  ),
-                // Category chip
-                Positioned(
-                  top: 8,
-                  left: 8,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.65),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Text(
-                      course.category,
-                      style: const TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white70,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            // ── Progress bar ───────────────────────────
             ClipRRect(
-              child: LinearProgressIndicator(
-                value: course.progress,
-                backgroundColor: AppColors.bgElevated,
-                valueColor: const AlwaysStoppedAnimation(AppColors.primary),
-                minHeight: 3,
-              ),
+              borderRadius: BorderRadius.circular(7),
+              child: course.thumbnailUrl.isNotEmpty
+                  ? Image.network(course.thumbnailUrl,
+                      width: 86, height: 58, fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => _thumbPlaceholder())
+                  : _thumbPlaceholder(),
             ),
-            // ── Info ───────────────────────────────────
-            Padding(
-              padding: const EdgeInsets.all(14),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    course.title,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      const Icon(Icons.play_circle_outline_rounded,
-                          size: 13, color: AppColors.textMuted),
-                      const SizedBox(width: 4),
-                      Text(
-                        '${course.videoCount} videos',
-                        style: const TextStyle(
-                          fontFamily: 'Inter', fontSize: 12, color: AppColors.textMuted),
-                      ),
-                      const SizedBox(width: 12),
-                      const Icon(Icons.timer_outlined, size: 13, color: AppColors.textMuted),
-                      const SizedBox(width: 4),
-                      Text(
-                        course.formattedDuration,
-                        style: const TextStyle(
-                          fontFamily: 'Inter', fontSize: 12, color: AppColors.textMuted),
-                      ),
-                      const Spacer(),
-                      Text(
-                        course.channelName,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontFamily: 'Inter', fontSize: 11, color: AppColors.textSecondary),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+            const SizedBox(width: 15),
+            Expanded(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(course.title, maxLines: 1, overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontFamily: 'Inter', fontSize: 15, fontWeight: FontWeight.w700)),
+                const SizedBox(height: 4),
+                Text(course.channelName.isEmpty ? 'YouTube playlist' : course.channelName,
+                    maxLines: 1, overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                const SizedBox(height: 10),
+                Row(children: [
+                  Expanded(child: ClipRRect(
+                    borderRadius: BorderRadius.circular(3),
+                    child: LinearProgressIndicator(value: course.progress, minHeight: 5,
+                      backgroundColor: AppColors.bgElevated,
+                      valueColor: const AlwaysStoppedAnimation(AppColors.primary)),
+                  )),
+                  const SizedBox(width: 10),
+                  Text('${course.completedCount}/${course.videoCount}',
+                      style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                ]),
+              ]),
             ),
+            const SizedBox(width: 12),
+            const Icon(Icons.arrow_forward_rounded, size: 19, color: AppColors.textSecondary),
           ],
         ),
       ),
@@ -146,8 +61,8 @@ class CourseCard extends StatelessWidget {
   }
 
   Widget _thumbPlaceholder() => Container(
-        height: 140,
-        width: double.infinity,
+        height: 58,
+        width: 86,
         color: AppColors.bgElevated,
         child: const Icon(Icons.video_library_outlined, color: AppColors.primary, size: 40),
       );
