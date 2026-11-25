@@ -36,20 +36,33 @@ class _CareerScreenState extends ConsumerState<CareerScreen>
     return Scaffold(
       backgroundColor: AppColors.bg,
       appBar: AppBar(
-        title: const Text('Employment'),
+        toolbarHeight: 76,
+        title: const Row(mainAxisSize: MainAxisSize.min, children: [
+          _CareerMark(),
+          SizedBox(width: 10),
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('Dooet Careers', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: AppColors.primaryDark)),
+            Text('Your professional space', style: TextStyle(fontSize: 11, color: AppColors.textSecondary, fontWeight: FontWeight.w500)),
+          ]),
+        ]),
         actions: [
           TextButton.icon(
             onPressed: () => context.go('/learn'),
             icon: const Icon(Icons.school_outlined, size: 17),
-            label: const Text('Learning'),
+            label: const Text('Back to learning'),
           ),
           const SizedBox(width: 8),
         ],
         bottom: TabBar(
           controller: _tabs,
           isScrollable: true,
+          labelColor: AppColors.primary,
+          unselectedLabelColor: AppColors.textSecondary,
+          indicatorColor: AppColors.primary,
+          indicatorWeight: 3,
+          labelStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
           tabs: const [
-            Tab(text: 'Employment profile'),
+            Tab(text: 'My profile'),
             Tab(text: 'Certificates'),
             Tab(text: 'Resume'),
             Tab(text: 'Job search'),
@@ -73,6 +86,21 @@ class _CareerScreenState extends ConsumerState<CareerScreen>
   }
 }
 
+class _CareerMark extends StatelessWidget {
+  const _CareerMark();
+
+  @override
+  Widget build(BuildContext context) => Container(
+        width: 38,
+        height: 38,
+        decoration: BoxDecoration(
+          color: AppColors.primaryDark,
+          borderRadius: BorderRadius.circular(11),
+        ),
+        child: const Icon(Icons.work_outline_rounded, color: Colors.white, size: 20),
+      );
+}
+
 class _CareerOverview extends StatelessWidget {
   const _CareerOverview({required this.uid});
   final String uid;
@@ -92,20 +120,26 @@ class _CareerOverview extends StatelessWidget {
         final readiness = (data['readinessScore'] as num?)?.toInt() ?? 42;
         final skills = List<String>.from(data['skills'] ?? const <String>[]);
         return ListView(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.fromLTRB(28, 30, 28, 48),
           children: [
-            Text('Employment profile',
-                style: Theme.of(context).textTheme.headlineSmall),
-            const SizedBox(height: 16),
-            LinearProgressIndicator(
-              value: readiness / 100,
-              minHeight: 12,
-              color: AppColors.primary,
-            ),
-            const SizedBox(height: 8),
-            Text('$readiness% overall readiness',
-                style: const TextStyle(fontWeight: FontWeight.w700)),
+            const Text('Professional profile', style: TextStyle(fontSize: 27, fontWeight: FontWeight.w800, letterSpacing: -.7)),
+            const SizedBox(height: 7),
+            const Text('Show employers the skills and proof you are building.', style: TextStyle(color: AppColors.textSecondary)),
             const SizedBox(height: 24),
+            Container(
+              padding: const EdgeInsets.all(22),
+              decoration: BoxDecoration(color: AppColors.primaryDark, borderRadius: BorderRadius.circular(18)),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const Row(children: [Icon(Icons.verified_user_outlined, color: Color(0xFFFFC4D5)), SizedBox(width: 9), Text('CAREER READINESS', style: TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.w800, letterSpacing: 1.1))]),
+                const SizedBox(height: 16),
+                Text('$readiness%', style: const TextStyle(color: Colors.white, fontSize: 36, fontWeight: FontWeight.w800)),
+                const SizedBox(height: 8),
+                ClipRRect(borderRadius: BorderRadius.circular(10), child: LinearProgressIndicator(value: readiness / 100, minHeight: 8, backgroundColor: Colors.white24, color: const Color(0xFFFF9BBB))),
+                const SizedBox(height: 10),
+                const Text('Complete your profile, add skills and showcase certificates.', style: TextStyle(color: Colors.white70, fontSize: 13)),
+              ]),
+            ),
+            const SizedBox(height: 30),
             Text('Skills', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 10),
             Wrap(
@@ -119,7 +153,7 @@ class _CareerOverview extends StatelessWidget {
             FilledButton.icon(
               onPressed: () => _saveCareerProfile(context, uid),
               icon: const Icon(Icons.edit_outlined),
-              label: const Text('Edit employment profile'),
+              label: const Text('Complete professional profile'),
             ),
           ],
         );
