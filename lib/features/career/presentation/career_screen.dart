@@ -413,7 +413,7 @@ class _PrototypeResume extends StatelessWidget {
       const Text('PROFILE', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w800, fontSize: 11, letterSpacing: 1)), const SizedBox(height: 6), const Text('Aspiring frontend developer with practical projects in responsive interfaces and data-driven user experiences.', style: TextStyle(fontSize: 13, color: AppColors.textSecondary)),
       const SizedBox(height: 17), const Text('SKILLS', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w800, fontSize: 11, letterSpacing: 1)), const SizedBox(height: 6), const Text('React · JavaScript · HTML/CSS · SQL · Figma', style: TextStyle(fontSize: 13, color: AppColors.textSecondary)),
       const SizedBox(height: 18), Wrap(spacing: 10, runSpacing: 10, children: [OutlinedButton.icon(onPressed: () {}, icon: const Icon(Icons.visibility_outlined, size: 17), label: const Text('Preview')), FilledButton.icon(onPressed: () {}, icon: const Icon(Icons.download_outlined, size: 17), label: const Text('Download PDF'))]),
-    ]),
+    ])),
     const SizedBox(height: 16), const Text('Choose a template', style: TextStyle(fontWeight: FontWeight.w800)), const SizedBox(height: 10),
     const Wrap(spacing: 10, children: [Chip(label: Text('Modern selected')), Chip(label: Text('Classic')), Chip(label: Text('Minimal'))]),
   ]);
@@ -538,7 +538,7 @@ class _PrototypeJobSearchState extends State<_PrototypeJobSearch> {
   ];
   @override
   Widget build(BuildContext context) {
-    final visible = jobs.where((job) => job.join(' ').toLowerCase().contains(query.toLowerCase())).toList();
+    final visible = jobs.where((job) => '${job.$1} ${job.$2} ${job.$3} ${job.$4} ${job.$5} ${job.$6}'.toLowerCase().contains(query.toLowerCase())).toList();
     return ListView(padding: const EdgeInsets.fromLTRB(28, 28, 28, 48), children: [
       const Text('Find your next role', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800)), const SizedBox(height: 7),
       const Text('Explore prototype job listings matched to your learning profile.', style: TextStyle(color: AppColors.textSecondary)), const SizedBox(height: 20),
