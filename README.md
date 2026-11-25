@@ -1,6 +1,14 @@
-# Doeet 📚⚡
+# dooet
 
-> A calm, task-first workspace for getting today’s work done, with learning tools when you need them.
+> Finish what you started. Import a YouTube playlist and follow it in a calm, distraction-free course workspace.
+
+## Two separate paths
+
+- **Learning** is for playlist-based courses, notes, progress, global course discovery, and webinars.
+- **Employment** is a separate profile and job-search workspace for resumes, certificates, job applications, and interview progress.
+
+Learning data stays in the existing learner profile and course collections.
+Employment data stays in `careerProfiles`, `resumes`, `applications`, and related career collections. Company hiring is isolated in the separate Company workspace and protected by Firebase role and membership rules.
 
 ## Features
 
