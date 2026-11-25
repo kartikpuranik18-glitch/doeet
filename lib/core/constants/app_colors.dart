@@ -1,84 +1,57 @@
-// lib/core/constants/app_colors.dart
 import 'package:flutter/material.dart';
 
-/// Dooet Design System — warm white with a restrained pink brand mark.
+/// Dooet visual system. Pink is reserved for the wordmark and small moments;
+/// learning actions use an accessible academy blue.
 class AppColors {
   AppColors._();
 
-  // ── Brand ──────────────────────────────────────────
-  static const Color brandPink = Color(0xFFE56F96);
-  static const Color primary = Color(0xFF262124);
-  static const Color primaryLight = Color(0xFF51494D);
-  static const Color primaryDark = Color(0xFF171315);
-  static const Color secondary = Color(0xFF6A6065);
+  static const Color brandPink = Color(0xFFE95D8A);
+  static const Color primary = Color(0xFF1956D1);
+  static const Color primaryLight = Color(0xFF3474EF);
+  static const Color primaryDark = Color(0xFF102A63);
+  static const Color secondary = Color(0xFF53637D);
   static const Color accent = brandPink;
 
-  // ── Alias for new screens ────────────────────────────
-  static const Color accentPurple = primary;
-  static const Color accentCyan = Color(0xFF8C8186);
-  static const Color accentGreen = Color(0xFF2F8B68);
-  static const Color accentGold = xpGold;                // Gold alias
+  static const Color accentPurple = Color(0xFF6D4CDB);
+  static const Color accentCyan = Color(0xFF11A9B8);
+  static const Color accentGreen = Color(0xFF16885E);
+  static const Color accentGold = xpGold;
 
-  // ── Backgrounds ────────────────────────────────────
-  static const Color bg = Color(0xFFFFFCFD);
+  static const Color bg = Color(0xFFF7F9FC);
   static const Color bgPrimary = bg;
   static const Color bgCard = Color(0xFFFFFFFF);
   static const Color bgSurface = bgCard;
-  static const Color bgElevated = Color(0xFFFFF7F9);
-  static const Color bgGlass = Color(0xCCFFFFFF);
+  static const Color bgElevated = Color(0xFFF0F5FF);
+  static const Color bgGlass = Color(0xEDFFFFFF);
 
-  // ── Text ───────────────────────────────────────────
-  static const Color textPrimary = Color(0xFF262124);
-  static const Color textSecondary = Color(0xFF665D62);
-  static const Color textMuted = Color(0xFF968B91);
+  static const Color textPrimary = Color(0xFF162033);
+  static const Color textSecondary = Color(0xFF526178);
+  static const Color textMuted = Color(0xFF8591A5);
 
-  // ── Borders ────────────────────────────────────────
-  static const Color border = Color(0xFFEEE7EA);
-  static const Color borderGlass = Color(0x22E56F96);
+  static const Color border = Color(0xFFE3E8F0);
+  static const Color borderGlass = Color(0x334479E8);
 
-  // ── Semantic ───────────────────────────────────────
-  static const Color success = Color(0xFF32D583);
-  static const Color warning = Color(0xFFFFB74D);
-  static const Color error = Color(0xFFFF5252);
-  static const Color info = Color(0xFF64B5F6);
+  static const Color success = Color(0xFF1E9B69);
+  static const Color warning = Color(0xFFE49A21);
+  static const Color error = Color(0xFFD6455D);
+  static const Color info = Color(0xFF3474EF);
 
-  // ── Gamification ───────────────────────────────────
-  static const Color xpGold = Color(0xFFFFD700);
-  static const Color streakFire = Color(0xFFFF6B35);
-  static const Color levelBadge = Color(0xFF9C27B0);
+  static const Color xpGold = Color(0xFFF2B84B);
+  static const Color streakFire = Color(0xFFFF7A45);
+  static const Color levelBadge = Color(0xFF7259CC);
 
-  // Legacy names retained so established UI widgets keep compiling. They are
-  // deliberately flat to avoid a gradient-heavy visual system.
   static const LinearGradient primaryGradient = LinearGradient(
-    colors: [primary, primary],
+    colors: [Color(0xFF2866E1), Color(0xFF1745AD)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
-
-  /// Alias used across new screens
   static const LinearGradient brandGradient = primaryGradient;
-
   static const LinearGradient heroGradient = LinearGradient(
-    colors: [bg, bg, bg],
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-  );
-
-  static const LinearGradient cardGradient = LinearGradient(
-    colors: [bgCard, bgCard],
+    colors: [Color(0xFFF1F5FF), Color(0xFFFDF8FA)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
-
-  static const LinearGradient streakGradient = LinearGradient(
-    colors: [Color(0xFFFF6B35), Color(0xFFFF4500)],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-
-  static const LinearGradient successGradient = LinearGradient(
-    colors: [Color(0xFF00D4AA), Color(0xFF00B890)],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
+  static const LinearGradient cardGradient = LinearGradient(colors: [bgCard, bgCard]);
+  static const LinearGradient streakGradient = LinearGradient(colors: [Color(0xFFFF9157), Color(0xFFFF684D)]);
+  static const LinearGradient successGradient = LinearGradient(colors: [Color(0xFF2DB982), Color(0xFF14875D)]);
 }
