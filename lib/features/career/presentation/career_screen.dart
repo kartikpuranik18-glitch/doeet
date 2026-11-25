@@ -21,7 +21,7 @@ class _CareerScreenState extends ConsumerState<CareerScreen>
   @override
   void initState() {
     super.initState();
-    _tabs = TabController(length: 5, vsync: this);
+    _tabs = TabController(length: 7, vsync: this);
   }
 
   @override
@@ -67,6 +67,8 @@ class _CareerScreenState extends ConsumerState<CareerScreen>
             Tab(text: 'Resume'),
             Tab(text: 'Job search'),
             Tab(text: 'Applications'),
+            Tab(text: 'Interview prep'),
+            Tab(text: 'Career insights'),
           ],
         ),
       ),
@@ -80,6 +82,8 @@ class _CareerScreenState extends ConsumerState<CareerScreen>
                 _ResumeTab(uid: uid),
                 _JobsTab(uid: uid),
                 _ApplicationsTab(uid: uid),
+                const _InterviewPrepTab(),
+                const _CareerInsightsTab(),
               ],
             ),
     );
@@ -509,4 +513,76 @@ class _ApplicationsTab extends StatelessWidget {
       },
     );
   }
+}
+
+class _InterviewPrepTab extends StatelessWidget {
+  const _InterviewPrepTab();
+
+  @override
+  Widget build(BuildContext context) => ListView(
+        padding: const EdgeInsets.fromLTRB(28, 28, 28, 48),
+        children: [
+          const Text('Interview preparation', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800, letterSpacing: -.6)),
+          const SizedBox(height: 7),
+          const Text('Practice the conversations and technical rounds that help you get hired.', style: TextStyle(color: AppColors.textSecondary)),
+          const SizedBox(height: 24),
+          Container(
+            padding: const EdgeInsets.all(22),
+            decoration: BoxDecoration(color: AppColors.primaryDark, borderRadius: BorderRadius.circular(18)),
+            child: const Row(children: [
+              Icon(Icons.record_voice_over_outlined, color: Color(0xFFFFC4D5), size: 30), SizedBox(width: 14),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('Mock interview simulator', style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w800)), SizedBox(height: 5), Text('A guided prototype for practicing role-specific questions.', style: TextStyle(color: Colors.white70, fontSize: 13))])),
+              Icon(Icons.arrow_forward_rounded, color: Colors.white),
+            ]),
+          ),
+          const SizedBox(height: 26),
+          const _CareerFeature(icon: Icons.people_outline_rounded, title: 'HR & behavioural questions', detail: 'Tell me about yourself, strengths, teamwork and salary discussions.', stat: '36 questions'),
+          const _CareerFeature(icon: Icons.code_rounded, title: 'Technical rounds', detail: 'Programming, SQL, frontend, Java and data fundamentals.', stat: '128 questions'),
+          const _CareerFeature(icon: Icons.calculate_outlined, title: 'Aptitude round', detail: 'Practice quantitative, reasoning and communication assessments.', stat: '18 tests'),
+          const _CareerFeature(icon: Icons.fact_check_outlined, title: 'Interview checklist', detail: 'Prepare your resume, projects, portfolio and research before the call.', stat: 'Open'),
+        ],
+      );
+}
+
+class _CareerInsightsTab extends StatelessWidget {
+  const _CareerInsightsTab();
+
+  @override
+  Widget build(BuildContext context) => ListView(
+        padding: const EdgeInsets.fromLTRB(28, 28, 28, 48),
+        children: [
+          const Text('Career insights', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800, letterSpacing: -.6)),
+          const SizedBox(height: 7),
+          const Text('A live-market style view of popular tech roles and the skills behind them.', style: TextStyle(color: AppColors.textSecondary)),
+          const SizedBox(height: 24),
+          Wrap(spacing: 14, runSpacing: 14, children: const [
+            _InsightMetric(value: '1,284', label: 'Tech roles indexed', icon: Icons.work_outline_rounded),
+            _InsightMetric(value: '46%', label: 'Remote or hybrid roles', icon: Icons.home_work_outlined),
+            _InsightMetric(value: '78%', label: 'Roles asking for projects', icon: Icons.folder_copy_outlined),
+          ]),
+          const SizedBox(height: 28),
+          const Text('In-demand roles', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 14),
+          const _CareerFeature(icon: Icons.web_rounded, title: 'Frontend Developer', detail: 'React · TypeScript · JavaScript · CSS', stat: '342 roles'),
+          const _CareerFeature(icon: Icons.query_stats_rounded, title: 'Data Analyst', detail: 'SQL · Excel · Power BI · Python', stat: '268 roles'),
+          const _CareerFeature(icon: Icons.storage_rounded, title: 'Backend Developer', detail: 'Java · Spring Boot · APIs · SQL', stat: '224 roles'),
+          const _CareerFeature(icon: Icons.design_services_outlined, title: 'UI/UX Designer', detail: 'Figma · Research · Prototyping', stat: '154 roles'),
+          const SizedBox(height: 22),
+          Container(padding: const EdgeInsets.all(18), decoration: BoxDecoration(color: const Color(0xFFFFF2F6), borderRadius: BorderRadius.circular(15), border: Border.all(color: const Color(0xFFF8D6E2))), child: const Row(children: [Icon(Icons.auto_awesome_outlined, color: AppColors.brandPink), SizedBox(width: 11), Expanded(child: Text('Prototype insight: add React, SQL and one portfolio project to improve your job match.', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)))])),
+        ],
+      );
+}
+
+class _InsightMetric extends StatelessWidget {
+  const _InsightMetric({required this.value, required this.label, required this.icon});
+  final String value; final String label; final IconData icon;
+  @override
+  Widget build(BuildContext context) => SizedBox(width: 210, child: Container(padding: const EdgeInsets.all(18), decoration: BoxDecoration(color: AppColors.bgCard, border: Border.all(color: AppColors.border), borderRadius: BorderRadius.circular(15)), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Icon(icon, color: AppColors.primary), const SizedBox(height: 15), Text(value, style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w800)), const SizedBox(height: 4), Text(label, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary))])));
+}
+
+class _CareerFeature extends StatelessWidget {
+  const _CareerFeature({required this.icon, required this.title, required this.detail, required this.stat});
+  final IconData icon; final String title; final String detail; final String stat;
+  @override
+  Widget build(BuildContext context) => Padding(padding: const EdgeInsets.only(bottom: 12), child: Container(padding: const EdgeInsets.all(18), decoration: BoxDecoration(color: AppColors.bgCard, borderRadius: BorderRadius.circular(15), border: Border.all(color: AppColors.border)), child: Row(children: [Container(width: 42, height: 42, decoration: BoxDecoration(color: AppColors.bgElevated, borderRadius: BorderRadius.circular(12)), child: Icon(icon, color: AppColors.primary)), const SizedBox(width: 14), Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(title, style: const TextStyle(fontWeight: FontWeight.w800)), const SizedBox(height: 4), Text(detail, style: const TextStyle(fontSize: 13, color: AppColors.textSecondary))])), Text(stat, style: const TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.w800))])));
 }
