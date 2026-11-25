@@ -1,39 +1,40 @@
 // lib/core/constants/app_colors.dart
 import 'package:flutter/material.dart';
 
-/// Doeet Design System — light pink palette
+/// Dooet Design System — warm white with a restrained pink brand mark.
 class AppColors {
   AppColors._();
 
   // ── Brand ──────────────────────────────────────────
-  static const Color primary = Color(0xFFD94F87);
-  static const Color primaryLight = Color(0xFFE978A0);
-  static const Color primaryDark = Color(0xFFB83268);
-  static const Color secondary = Color(0xFFB84F87);
-  static const Color accent = Color(0xFFEA6A91);
+  static const Color brandPink = Color(0xFFE56F96);
+  static const Color primary = Color(0xFF262124);
+  static const Color primaryLight = Color(0xFF51494D);
+  static const Color primaryDark = Color(0xFF171315);
+  static const Color secondary = Color(0xFF6A6065);
+  static const Color accent = brandPink;
 
   // ── Alias for new screens ────────────────────────────
-  static const Color accentPurple = primary;             // Electric violet alias
-  static const Color accentCyan = Color(0xFFD889A8);
-  static const Color accentGreen = secondary;            // Mint green alias
+  static const Color accentPurple = primary;
+  static const Color accentCyan = Color(0xFF8C8186);
+  static const Color accentGreen = Color(0xFF2F8B68);
   static const Color accentGold = xpGold;                // Gold alias
 
   // ── Backgrounds ────────────────────────────────────
-  static const Color bg = Color(0xFFFFF4F7);
+  static const Color bg = Color(0xFFFFFCFD);
   static const Color bgPrimary = bg;
   static const Color bgCard = Color(0xFFFFFFFF);
   static const Color bgSurface = bgCard;
-  static const Color bgElevated = Color(0xFFFFE7EF);
+  static const Color bgElevated = Color(0xFFFFF7F9);
   static const Color bgGlass = Color(0xCCFFFFFF);
 
   // ── Text ───────────────────────────────────────────
-  static const Color textPrimary = Color(0xFF382632);
-  static const Color textSecondary = Color(0xFF765D6B);
-  static const Color textMuted = Color(0xFFA48C99);
+  static const Color textPrimary = Color(0xFF262124);
+  static const Color textSecondary = Color(0xFF665D62);
+  static const Color textMuted = Color(0xFF968B91);
 
   // ── Borders ────────────────────────────────────────
-  static const Color border = Color(0xFFF0D0DC);
-  static const Color borderGlass = Color(0x55D94F87);
+  static const Color border = Color(0xFFEEE7EA);
+  static const Color borderGlass = Color(0x22E56F96);
 
   // ── Semantic ───────────────────────────────────────
   static const Color success = Color(0xFF32D583);
@@ -46,9 +47,10 @@ class AppColors {
   static const Color streakFire = Color(0xFFFF6B35);
   static const Color levelBadge = Color(0xFF9C27B0);
 
-  // ── Gradients ──────────────────────────────────────
+  // Legacy names retained so established UI widgets keep compiling. They are
+  // deliberately flat to avoid a gradient-heavy visual system.
   static const LinearGradient primaryGradient = LinearGradient(
-    colors: [primary, primaryLight],
+    colors: [primary, primary],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
@@ -57,13 +59,13 @@ class AppColors {
   static const LinearGradient brandGradient = primaryGradient;
 
   static const LinearGradient heroGradient = LinearGradient(
-    colors: [Color(0xFFFFE5EF), Color(0xFFFFF4F7), Color(0xFFFAD8E5)],
+    colors: [bg, bg, bg],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
   );
 
   static const LinearGradient cardGradient = LinearGradient(
-    colors: [Color(0xFFFFFFFF), Color(0xFFFFEDF3)],
+    colors: [bgCard, bgCard],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
