@@ -30,6 +30,7 @@ import '../features/career/presentation/career_screen.dart';
 import '../features/career/presentation/certificate_verification_screen.dart';
 import '../features/company/presentation/company_screen.dart';
 import '../features/learning/presentation/learning_hub_screen.dart';
+import '../features/learning/presentation/learning_toolkit_screen.dart';
 import 'main_scaffold.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -69,6 +70,12 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(path: '/home', builder: (_, __) => const HomeScreen()),
           GoRoute(path: '/learn', builder: (_, __) => const LearningHubScreen()),
           GoRoute(path: '/courses', builder: (_, __) => const CoursesScreen()),
+          GoRoute(
+            path: '/learning/:section',
+            builder: (_, state) => LearningToolkitScreen(
+              section: state.pathParameters['section']!,
+            ),
+          ),
           GoRoute(
               path: '/analytics', builder: (_, __) => const AnalyticsScreen()),
           GoRoute(
