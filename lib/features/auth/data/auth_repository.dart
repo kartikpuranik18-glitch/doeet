@@ -85,6 +85,17 @@ class AuthRepository {
         return user;
       }
 
+      // Preserve existing DOEET profiles while adding the new workspace
+      // fields. This write is deliberately learner-only; privileged roles are
+      // still granted exclusively by the Admin SDK function.
+      if (!snap.data()!.containsKey('roles')) {
+        await _userDoc(uid).set({
+          'roles': const ['learner'],
+          'activeWorkspace': 'learner',
+          'updatedAt': FieldValue.serverTimestamp(),
+        }, SetOptions(merge: true));
+      }
+
       return UserModel.fromMap(snap.data()!);
     });
   }
