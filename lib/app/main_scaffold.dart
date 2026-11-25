@@ -16,25 +16,24 @@ class MainScaffold extends StatelessWidget {
   final Widget child;
 
   static const _items = <_NavItem>[
-    _NavItem('Learn', Icons.play_circle_outline_rounded, '/courses'),
+    _NavItem('Learn', Icons.play_circle_outline_rounded, '/learn'),
     _NavItem('Dashboard', Icons.space_dashboard_outlined, '/home'),
     _NavItem('Notes', Icons.sticky_note_2_outlined, '/notes'),
     _NavItem('Progress', Icons.insights_outlined, '/analytics'),
     _NavItem('Settings', Icons.settings_outlined, '/settings'),
   ];
   static const _workspaceItems = <_NavItem>[
-    _NavItem('Learn', Icons.play_circle_outline_rounded, '/courses'),
-    _NavItem('Paths', Icons.route_outlined, '/learning-paths'),
+    _NavItem('Learning', Icons.play_circle_outline_rounded, '/learn'),
+    _NavItem('My Courses', Icons.library_books_outlined, '/courses'),
     _NavItem('Dashboard', Icons.space_dashboard_outlined, '/home'),
-    _NavItem('Career', Icons.work_outline_rounded, '/career'),
     _NavItem('Calendar', Icons.calendar_month_outlined, '/calendar'),
     _NavItem('Daily Tasks', Icons.checklist_rounded, '/tasks'),
     _NavItem('Goals', Icons.flag_outlined, '/goals'),
     _NavItem('Notes', Icons.sticky_note_2_outlined, '/notes'),
-    _NavItem('AI Notes', Icons.auto_awesome_outlined, '/ai-notes'),
     _NavItem('Habits', Icons.local_fire_department_outlined, '/habits'),
     _NavItem('Analytics', Icons.insights_outlined, '/analytics'),
     _NavItem('Achievements', Icons.emoji_events_outlined, '/badges'),
+    _NavItem('Employment', Icons.work_outline_rounded, '/career'),
     _NavItem('Settings', Icons.settings_outlined, '/settings'),
   ];
   static const _mobileMoreItems = <_NavItem>[
@@ -85,7 +84,7 @@ class MainScaffold extends StatelessWidget {
   }
 
   static int _activeIndex(String location) {
-    if (location.startsWith('/course') || location.startsWith('/player')) {
+    if (location.startsWith('/learn') || location.startsWith('/course') || location.startsWith('/player')) {
       return 0;
     }
     if (location.startsWith('/home')) return 1;
@@ -121,14 +120,14 @@ class _Sidebar extends StatelessWidget {
                     width: 34,
                     height: 34,
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withOpacity(.18),
+                      color: AppColors.brandPink.withOpacity(.16),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Icon(Icons.check_rounded,
-                        color: AppColors.primaryLight, size: 21),
+                        color: AppColors.brandPink, size: 21),
                   ),
                   const SizedBox(width: 11),
-                  const Text('doeet',
+                  const Text('dooet',
                       style: TextStyle(
                         color: AppColors.textPrimary,
                         fontSize: 19,
@@ -275,6 +274,7 @@ class _Topbar extends StatelessWidget {
       _ when location.startsWith('/home') => 'Dashboard',
       _ when location.startsWith('/course') || location.startsWith('/player') =>
         'Learn',
+      _ when location.startsWith('/learn') => 'Learning',
       _ when location.startsWith('/notes') => 'Notes',
       _ when location.startsWith('/analytics') => switch (requestedSection) {
           'calendar' => 'Calendar',
@@ -322,6 +322,17 @@ class _Topbar extends StatelessWidget {
               fontSize: 12,
             )),
         const SizedBox(width: 18),
+        OutlinedButton.icon(
+          onPressed: () => context.go('/career'),
+          icon: const Icon(Icons.work_outline_rounded, size: 17),
+          label: const Text('Employment'),
+          style: OutlinedButton.styleFrom(
+            foregroundColor: AppColors.textPrimary,
+            side: const BorderSide(color: AppColors.border),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          ),
+        ),
+        const SizedBox(width: 10),
         if (location.startsWith('/courses'))
           Padding(
             padding: const EdgeInsets.only(right: 12),
