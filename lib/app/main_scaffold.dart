@@ -17,30 +17,27 @@ class MainScaffold extends StatelessWidget {
 
   static const _items = <_NavItem>[
     _NavItem('Learn', Icons.school_outlined, '/learn'),
-    _NavItem('My plan', Icons.grid_view_rounded, '/home'),
-    _NavItem('Notes', Icons.edit_note_rounded, '/notes'),
-    _NavItem('Progress', Icons.auto_graph_rounded, '/analytics'),
+    _NavItem('Courses', Icons.menu_book_rounded, '/courses'),
+    _NavItem('Practice', Icons.bolt_outlined, '/learning/practice'),
+    _NavItem('Projects', Icons.folder_copy_outlined, '/learning/projects'),
     _NavItem('Settings', Icons.settings_outlined, '/settings'),
   ];
   static const _workspaceItems = <_NavItem>[
     _NavItem('Discover', Icons.explore_outlined, '/learn'),
     _NavItem('My learning', Icons.menu_book_rounded, '/courses'),
-    _NavItem('Study plan', Icons.grid_view_rounded, '/home'),
-    _NavItem('Calendar', Icons.calendar_month_outlined, '/calendar'),
-    _NavItem('Daily Tasks', Icons.checklist_rounded, '/tasks'),
-    _NavItem('Goals', Icons.flag_outlined, '/goals'),
+    _NavItem('Learning paths', Icons.route_outlined, '/learning/paths'),
+    _NavItem('Practice lab', Icons.bolt_outlined, '/learning/practice'),
+    _NavItem('Projects', Icons.folder_copy_outlined, '/learning/projects'),
+    _NavItem('Webinars', Icons.live_tv_outlined, '/learning/webinars'),
     _NavItem('Notes', Icons.sticky_note_2_outlined, '/notes'),
-    _NavItem('Habits', Icons.local_fire_department_outlined, '/habits'),
-    _NavItem('Progress', Icons.auto_graph_rounded, '/analytics'),
-    _NavItem('Achievements', Icons.workspace_premium_outlined, '/badges'),
+    _NavItem('Certificates', Icons.verified_outlined, '/learning/certificates'),
     _NavItem('Settings', Icons.settings_outlined, '/settings'),
   ];
   static const _mobileMoreItems = <_NavItem>[
-    _NavItem('Calendar', Icons.calendar_month_outlined, '/calendar'),
-    _NavItem('Daily Tasks', Icons.checklist_rounded, '/tasks'),
-    _NavItem('Goals', Icons.flag_outlined, '/goals'),
-    _NavItem('Habits', Icons.local_fire_department_outlined, '/habits'),
-    _NavItem('Achievements', Icons.emoji_events_outlined, '/badges'),
+    _NavItem('Learning paths', Icons.route_outlined, '/learning/paths'),
+    _NavItem('Webinars', Icons.live_tv_outlined, '/learning/webinars'),
+    _NavItem('Notes', Icons.sticky_note_2_outlined, '/notes'),
+    _NavItem('Certificates', Icons.verified_outlined, '/learning/certificates'),
     _NavItem('Settings', Icons.settings_outlined, '/settings'),
   ];
 
@@ -86,13 +83,9 @@ class MainScaffold extends StatelessWidget {
     if (location.startsWith('/learn') || location.startsWith('/course') || location.startsWith('/player')) {
       return 0;
     }
-    if (location.startsWith('/home')) return 1;
-    if (location == '/calendar' ||
-        location == '/tasks' ||
-        location == '/goals' ||
-        location == '/habits') return 1;
-    if (location.startsWith('/note')) return 2;
-    if (location.startsWith('/analytics')) return 3;
+    if (location.startsWith('/courses')) return 1;
+    if (location.startsWith('/learning/practice')) return 2;
+    if (location.startsWith('/learning/projects')) return 3;
     return 4;
   }
 }
@@ -268,6 +261,11 @@ class _Topbar extends StatelessWidget {
       _ when location.startsWith('/home') => 'Dashboard',
       _ when location.startsWith('/course') || location.startsWith('/player') =>
         'Learn',
+      _ when location.startsWith('/learning/paths') => 'Learning paths',
+      _ when location.startsWith('/learning/practice') => 'Practice lab',
+      _ when location.startsWith('/learning/projects') => 'Projects',
+      _ when location.startsWith('/learning/webinars') => 'Webinars',
+      _ when location.startsWith('/learning/certificates') => 'Certificates',
       _ when location.startsWith('/learn') => 'Learning',
       _ when location.startsWith('/notes') => 'Notes',
       _ when location.startsWith('/analytics') => switch (requestedSection) {
