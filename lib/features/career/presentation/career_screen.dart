@@ -7,6 +7,19 @@ import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../auth/presentation/auth_provider.dart';
 
+final _prototypeApplications = ValueNotifier<List<_PrototypeApplication>>([
+  const _PrototypeApplication('Junior Data Analyst', 'Northstar Analytics', 'Screening', 'Applied 2 days ago'),
+  const _PrototypeApplication('UI/UX Design Intern', 'BrightPixel Studio', 'Interview', 'Interview this Friday'),
+]);
+
+class _PrototypeApplication {
+  const _PrototypeApplication(this.role, this.company, this.stage, this.detail);
+  final String role;
+  final String company;
+  final String stage;
+  final String detail;
+}
+
 class CareerScreen extends ConsumerStatefulWidget {
   const CareerScreen({super.key});
 
@@ -561,7 +574,7 @@ class _PrototypeJobCard extends StatelessWidget {
   Widget build(BuildContext context) => Padding(padding: const EdgeInsets.only(bottom: 12), child: Container(padding: const EdgeInsets.all(19), decoration: BoxDecoration(color: AppColors.bgCard, border: Border.all(color: AppColors.border), borderRadius: BorderRadius.circular(16)), child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
     Container(width: 46, height: 46, decoration: BoxDecoration(color: AppColors.bgElevated, borderRadius: BorderRadius.circular(14)), child: const Icon(Icons.business_rounded, color: AppColors.primary)), const SizedBox(width: 14),
     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(job.$1, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800)), const SizedBox(height: 3), Text(job.$2, style: const TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.w600)), const SizedBox(height: 9), Text('${job.$3} · ${job.$4}', style: const TextStyle(color: AppColors.textSecondary, fontSize: 13)), const SizedBox(height: 7), Text(job.$5, style: const TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.w700)), const SizedBox(height: 6), Text(job.$6, style: const TextStyle(color: AppColors.textMuted, fontSize: 11))])),
-    const SizedBox(width: 10), Column(children: [FilledButton(onPressed: () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Prototype application saved.'))), child: const Text('Apply')), const SizedBox(height: 5), TextButton(onPressed: () {}, child: const Text('Save'))]),
+    const SizedBox(width: 10), Column(children: [FilledButton(onPressed: () { final alreadyApplied = _prototypeApplications.value.any((item) => item.role == job.$1 && item.company == job.$2); if (!alreadyApplied) { _prototypeApplications.value = [_PrototypeApplication(job.$1, job.$2, 'Applied', 'Application submitted just now'), ..._prototypeApplications.value]; } ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Application added to your tracker.'))); }, child: const Text('Apply')), const SizedBox(height: 5), TextButton(onPressed: () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Job saved for later.'))), child: const Text('Save'))]),
   ])));
 }
 
@@ -581,9 +594,7 @@ class _ApplicationsTab extends StatelessWidget {
       stream: apps,
       builder: (context, snapshot) {
         final docs = snapshot.data?.docs ?? const [];
-        if (docs.isEmpty) {
-          return const Center(child: Text('No applications yet.'));
-        }
+        if (docs.isEmpty) return const _PrototypeApplications();
         return ListView.separated(
           padding: const EdgeInsets.all(24),
           itemCount: docs.length,
@@ -602,6 +613,48 @@ class _ApplicationsTab extends StatelessWidget {
       },
     );
   }
+}
+
+class _PrototypeApplications extends StatelessWidget {
+  const _PrototypeApplications();
+  @override
+  Widget build(BuildContext context) => ValueListenableBuilder<List<_PrototypeApplication>>(
+        valueListenable: _prototypeApplications,
+        builder: (context, applications, _) => ListView(
+          padding: const EdgeInsets.fromLTRB(28, 28, 28, 48),
+          children: [
+            const Text('Application tracker', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800)),
+            const SizedBox(height: 7),
+            const Text('Keep every opportunity in one simple pipeline.', style: TextStyle(color: AppColors.textSecondary)),
+            const SizedBox(height: 22),
+            Wrap(spacing: 10, runSpacing: 10, children: [
+              _ApplicationStat(value: '${applications.length}', label: 'Total applications', color: AppColors.primary),
+              _ApplicationStat(value: '${applications.where((item) => item.stage == 'Screening').length}', label: 'In screening', color: AppColors.warning),
+              _ApplicationStat(value: '${applications.where((item) => item.stage == 'Interview').length}', label: 'Interviews', color: AppColors.success),
+            ]),
+            const SizedBox(height: 26),
+            const Text('Your applications', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18)),
+            const SizedBox(height: 12),
+            for (final app in applications) _ApplicationRow(application: app),
+            const SizedBox(height: 22),
+            Container(padding: const EdgeInsets.all(17), decoration: BoxDecoration(color: const Color(0xFFFFF2F6), borderRadius: BorderRadius.circular(15), border: Border.all(color: const Color(0xFFF8D6E2))), child: const Row(children: [Icon(Icons.lightbulb_outline_rounded, color: AppColors.brandPink), SizedBox(width: 11), Expanded(child: Text('Tip: follow up 5–7 days after applying, and tailor your project links for each role.', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)))])),
+          ],
+        ),
+      );
+}
+
+class _ApplicationStat extends StatelessWidget {
+  const _ApplicationStat({required this.value, required this.label, required this.color});
+  final String value; final String label; final Color color;
+  @override
+  Widget build(BuildContext context) => Container(width: 150, padding: const EdgeInsets.all(16), decoration: BoxDecoration(color: AppColors.bgCard, border: Border.all(color: AppColors.border), borderRadius: BorderRadius.circular(14)), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(value, style: TextStyle(color: color, fontSize: 24, fontWeight: FontWeight.w800)), const SizedBox(height: 4), Text(label, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary))]));
+}
+
+class _ApplicationRow extends StatelessWidget {
+  const _ApplicationRow({required this.application});
+  final _PrototypeApplication application;
+  @override
+  Widget build(BuildContext context) { final color = application.stage == 'Interview' ? AppColors.success : application.stage == 'Screening' ? AppColors.warning : AppColors.primary; return Padding(padding: const EdgeInsets.only(bottom: 12), child: Container(padding: const EdgeInsets.all(18), decoration: BoxDecoration(color: AppColors.bgCard, border: Border.all(color: AppColors.border), borderRadius: BorderRadius.circular(15)), child: Row(children: [Container(width: 42, height: 42, decoration: BoxDecoration(color: color.withOpacity(.12), borderRadius: BorderRadius.circular(12)), child: Icon(Icons.work_outline_rounded, color: color)), const SizedBox(width: 13), Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(application.role, style: const TextStyle(fontWeight: FontWeight.w800)), const SizedBox(height: 3), Text('${application.company} · ${application.detail}', style: const TextStyle(color: AppColors.textSecondary, fontSize: 13))])), Chip(label: Text(application.stage))]))); }
 }
 
 class _InterviewPrepTab extends StatelessWidget {
