@@ -136,6 +136,7 @@ class _ImportCallout extends StatelessWidget {
                   Text('Paste a YouTube playlist and follow it lesson by lesson — without distractions.',
                       style: TextStyle(color: AppColors.textSecondary, height: 1.4)),
                 ]),
+              ),
               Row(mainAxisSize: MainAxisSize.min, children: [
                 OutlinedButton(onPressed: onCourses, child: const Text('My courses')),
                 const SizedBox(width: 10),
