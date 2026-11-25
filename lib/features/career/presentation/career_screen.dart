@@ -121,8 +121,8 @@ class _CareerOverview extends StatelessWidget {
       stream: profile,
       builder: (context, snapshot) {
         final data = snapshot.data?.data() ?? const <String, dynamic>{};
-        final readiness = (data['readinessScore'] as num?)?.toInt() ?? 42;
-        final skills = List<String>.from(data['skills'] ?? const <String>[]);
+        final readiness = (data['readinessScore'] as num?)?.toInt() ?? 72;
+        final skills = List<String>.from(data['skills'] ?? const ['React', 'JavaScript', 'SQL', 'Figma']);
         return ListView(
           padding: const EdgeInsets.fromLTRB(28, 30, 28, 48),
           children: [
@@ -144,6 +144,17 @@ class _CareerOverview extends StatelessWidget {
               ]),
             ),
             const SizedBox(height: 30),
+            Container(
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(color: AppColors.bgCard, borderRadius: BorderRadius.circular(15), border: Border.all(color: AppColors.border)),
+              child: const Row(children: [
+                CircleAvatar(radius: 23, backgroundColor: Color(0xFFFFE8F0), child: Icon(Icons.person_outline_rounded, color: AppColors.brandPink)),
+                SizedBox(width: 13),
+                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('Aspiring Frontend Developer', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800)), SizedBox(height: 3), Text('Open to internships and entry-level opportunities', style: TextStyle(color: AppColors.textSecondary, fontSize: 13))])),
+                Icon(Icons.edit_outlined, color: AppColors.primary),
+              ]),
+            ),
+            const SizedBox(height: 24),
             Text('Skills', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 10),
             Wrap(
@@ -257,17 +268,7 @@ class _CertificatesTab extends StatelessWidget {
           return const Center(child: Text('Certificates are unavailable.'));
         }
         final docs = snapshot.data?.docs ?? const [];
-        if (docs.isEmpty) {
-          return const Center(
-            child: Padding(
-              padding: EdgeInsets.all(24),
-              child: Text(
-                'No certificates yet. Complete every course requirement and pass the final assessment.',
-                textAlign: TextAlign.center,
-              ),
-            ),
-          );
-        }
+        if (docs.isEmpty) return const _PrototypeCertificates();
         return ListView.separated(
           padding: const EdgeInsets.all(24),
           itemCount: docs.length,
@@ -319,7 +320,7 @@ class _ResumeTab extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             if (docs.isEmpty)
-              const Text('Create a role-specific resume from your DOEET profile.')
+              const _PrototypeResume()
             else
               for (final doc in docs)
                 Card(
@@ -374,6 +375,50 @@ class _ResumeTab extends StatelessWidget {
   }
 }
 
+class _PrototypeCertificates extends StatelessWidget {
+  const _PrototypeCertificates();
+  @override
+  Widget build(BuildContext context) => ListView(padding: const EdgeInsets.fromLTRB(28, 28, 28, 48), children: [
+    const Text('Certificates & credentials', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800)),
+    const SizedBox(height: 7), const Text('Demo credentials show how verified learning will appear to employers.', style: TextStyle(color: AppColors.textSecondary)),
+    const SizedBox(height: 24),
+    const _CredentialCard(title: 'Frontend Foundations', issuer: 'Dooet Learning', id: 'DOEET-FE-2026-4812', date: 'Issued November 2026', color: AppColors.primary),
+    const SizedBox(height: 14),
+    const _CredentialCard(title: 'SQL for Data Analysis', issuer: 'Dooet Learning', id: 'DOEET-SQL-2026-9284', date: 'Issued October 2026', color: AppColors.success),
+    const SizedBox(height: 14),
+    const _CredentialCard(title: 'Product Design Essentials', issuer: 'Dooet Learning', id: 'DOEET-UX-2026-1739', date: 'Issued September 2026', color: AppColors.accentPurple),
+  ]);
+}
+
+class _CredentialCard extends StatelessWidget {
+  const _CredentialCard({required this.title, required this.issuer, required this.id, required this.date, required this.color});
+  final String title; final String issuer; final String id; final String date; final Color color;
+  @override
+  Widget build(BuildContext context) => Container(padding: const EdgeInsets.all(20), decoration: BoxDecoration(color: AppColors.bgCard, border: Border.all(color: AppColors.border), borderRadius: BorderRadius.circular(16)), child: Row(children: [
+    Container(width: 52, height: 52, decoration: BoxDecoration(color: color.withOpacity(.12), borderRadius: BorderRadius.circular(15)), child: Icon(Icons.workspace_premium_rounded, color: color, size: 28)), const SizedBox(width: 16),
+    Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800)), const SizedBox(height: 4), Text('$issuer · $date', style: const TextStyle(color: AppColors.textSecondary, fontSize: 13)), const SizedBox(height: 7), Text('Verification ID: $id', style: const TextStyle(color: AppColors.textMuted, fontSize: 11))])),
+    TextButton.icon(onPressed: () {}, icon: const Icon(Icons.share_outlined, size: 16), label: const Text('Share')),
+  ]));
+}
+
+class _PrototypeResume extends StatelessWidget {
+  const _PrototypeResume();
+  @override
+  Widget build(BuildContext context) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    const Text('Resume studio', style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800)), const SizedBox(height: 6),
+    const Text('A ready-to-customise resume built from your Dooet profile.', style: TextStyle(color: AppColors.textSecondary)), const SizedBox(height: 20),
+    Container(padding: const EdgeInsets.all(22), decoration: BoxDecoration(color: AppColors.bgCard, borderRadius: BorderRadius.circular(16), border: Border.all(color: AppColors.border)), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      const Row(children: [Icon(Icons.description_rounded, color: AppColors.primary, size: 30), SizedBox(width: 12), Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('Frontend Developer Resume', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)), SizedBox(height: 3), Text('ATS score: 82 · Updated today', style: TextStyle(color: AppColors.textSecondary, fontSize: 13))]))]),
+      const SizedBox(height: 20), const Divider(), const SizedBox(height: 14),
+      const Text('PROFILE', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w800, fontSize: 11, letterSpacing: 1)), const SizedBox(height: 6), const Text('Aspiring frontend developer with practical projects in responsive interfaces and data-driven user experiences.', style: TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+      const SizedBox(height: 17), const Text('SKILLS', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w800, fontSize: 11, letterSpacing: 1)), const SizedBox(height: 6), const Text('React · JavaScript · HTML/CSS · SQL · Figma', style: TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+      const SizedBox(height: 18), Wrap(spacing: 10, runSpacing: 10, children: [OutlinedButton.icon(onPressed: () {}, icon: const Icon(Icons.visibility_outlined, size: 17), label: const Text('Preview')), FilledButton.icon(onPressed: () {}, icon: const Icon(Icons.download_outlined, size: 17), label: const Text('Download PDF'))]),
+    ]),
+    const SizedBox(height: 16), const Text('Choose a template', style: TextStyle(fontWeight: FontWeight.w800)), const SizedBox(height: 10),
+    const Wrap(spacing: 10, children: [Chip(label: Text('Modern selected')), Chip(label: Text('Classic')), Chip(label: Text('Minimal'))]),
+  ]);
+}
+
 class _JobsTab extends StatefulWidget {
   const _JobsTab({required this.uid});
   final String uid;
@@ -409,6 +454,7 @@ class _JobsTabState extends State<_JobsTab> {
         if (snapshot.hasError) {
           return const Center(child: Text('Jobs are unavailable.'));
         }
+        if (docs.isEmpty) return const _PrototypeJobSearch();
         return ListView.separated(
           padding: const EdgeInsets.all(24),
           itemCount: docs.isEmpty ? 2 : docs.length + 1,
@@ -474,6 +520,49 @@ class _JobsTabState extends State<_JobsTab> {
       }
     }
   }
+}
+
+class _PrototypeJobSearch extends StatefulWidget {
+  const _PrototypeJobSearch();
+  @override
+  State<_PrototypeJobSearch> createState() => _PrototypeJobSearchState();
+}
+
+class _PrototypeJobSearchState extends State<_PrototypeJobSearch> {
+  String query = '';
+  static const jobs = [
+    ('Frontend Developer Intern', 'Nexora Labs', 'Bengaluru · Hybrid', '₹20k–₹30k/month', 'React · JavaScript · CSS', '32 applicants'),
+    ('Junior Data Analyst', 'Northstar Analytics', 'Remote · India', '₹4.5L–₹6L/year', 'SQL · Excel · Power BI', '48 applicants'),
+    ('UI/UX Design Intern', 'BrightPixel Studio', 'Mumbai · Hybrid', '₹18k–₹25k/month', 'Figma · Prototyping · Research', '21 applicants'),
+    ('Java Developer Trainee', 'CloudForge Systems', 'Pune · On-site', '₹4L–₹5.5L/year', 'Java · Spring Boot · SQL', '64 applicants'),
+  ];
+  @override
+  Widget build(BuildContext context) {
+    final visible = jobs.where((job) => job.join(' ').toLowerCase().contains(query.toLowerCase())).toList();
+    return ListView(padding: const EdgeInsets.fromLTRB(28, 28, 28, 48), children: [
+      const Text('Find your next role', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800)), const SizedBox(height: 7),
+      const Text('Explore prototype job listings matched to your learning profile.', style: TextStyle(color: AppColors.textSecondary)), const SizedBox(height: 20),
+      TextField(onChanged: (value) => setState(() => query = value), decoration: const InputDecoration(hintText: 'Search jobs, skills, companies or locations', prefixIcon: Icon(Icons.search_rounded))), const SizedBox(height: 14),
+      Wrap(spacing: 8, runSpacing: 8, children: const [Chip(label: Text('Remote')), Chip(label: Text('Internship')), Chip(label: Text('Entry level')), Chip(label: Text('Tech'))]), const SizedBox(height: 20),
+      Text('${visible.length} recommended roles', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)), const SizedBox(height: 12),
+      for (final job in visible) _PrototypeJobCard(job: job),
+      const SizedBox(height: 24), const Text('Recommended for you', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800)), const SizedBox(height: 8),
+      const Text('Based on your React, SQL and Figma skills.', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)), const SizedBox(height: 12),
+      const _CareerFeature(icon: Icons.auto_awesome_outlined, title: 'Build one more React project', detail: 'Portfolio evidence can improve your match for frontend roles.', stat: '+18% match'),
+      const _CareerFeature(icon: Icons.bookmark_outline_rounded, title: 'Set a job alert', detail: 'Get notified when new entry-level frontend roles are added.', stat: 'Create alert'),
+    ]);
+  }
+}
+
+class _PrototypeJobCard extends StatelessWidget {
+  const _PrototypeJobCard({required this.job});
+  final (String, String, String, String, String, String) job;
+  @override
+  Widget build(BuildContext context) => Padding(padding: const EdgeInsets.only(bottom: 12), child: Container(padding: const EdgeInsets.all(19), decoration: BoxDecoration(color: AppColors.bgCard, border: Border.all(color: AppColors.border), borderRadius: BorderRadius.circular(16)), child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    Container(width: 46, height: 46, decoration: BoxDecoration(color: AppColors.bgElevated, borderRadius: BorderRadius.circular(14)), child: const Icon(Icons.business_rounded, color: AppColors.primary)), const SizedBox(width: 14),
+    Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(job.$1, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800)), const SizedBox(height: 3), Text(job.$2, style: const TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.w600)), const SizedBox(height: 9), Text('${job.$3} · ${job.$4}', style: const TextStyle(color: AppColors.textSecondary, fontSize: 13)), const SizedBox(height: 7), Text(job.$5, style: const TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.w700)), const SizedBox(height: 6), Text(job.$6, style: const TextStyle(color: AppColors.textMuted, fontSize: 11))])),
+    const SizedBox(width: 10), Column(children: [FilledButton(onPressed: () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Prototype application saved.'))), child: const Text('Apply')), const SizedBox(height: 5), TextButton(onPressed: () {}, child: const Text('Save'))]),
+  ])));
 }
 
 class _ApplicationsTab extends StatelessWidget {
