@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
 
-/// Primary CTA button with gradient background and press animation
+/// Primary CTA with a compact, distraction-free presentation.
 class GradientButton extends StatefulWidget {
   const GradientButton({
     super.key,
@@ -12,7 +12,7 @@ class GradientButton extends StatefulWidget {
     this.icon,
     this.isLoading = false,
     this.height = 52,
-    this.borderRadius = 14,
+    this.borderRadius = 9,
   });
 
   final String label;
@@ -69,15 +69,8 @@ class _GradientButtonState extends State<GradientButton>
         child: Container(
           height: widget.height,
           decoration: BoxDecoration(
-            gradient: widget.gradient ?? AppColors.primaryGradient,
+            color: AppColors.primary,
             borderRadius: BorderRadius.circular(widget.borderRadius),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.primary.withOpacity(0.3),
-                blurRadius: 20,
-                offset: const Offset(0, 8),
-              ),
-            ],
           ),
           child: Center(
             child: widget.isLoading
