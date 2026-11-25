@@ -16,24 +16,23 @@ class MainScaffold extends StatelessWidget {
   final Widget child;
 
   static const _items = <_NavItem>[
-    _NavItem('Learn', Icons.play_circle_outline_rounded, '/learn'),
-    _NavItem('Dashboard', Icons.space_dashboard_outlined, '/home'),
-    _NavItem('Notes', Icons.sticky_note_2_outlined, '/notes'),
-    _NavItem('Progress', Icons.insights_outlined, '/analytics'),
+    _NavItem('Learn', Icons.school_outlined, '/learn'),
+    _NavItem('My plan', Icons.grid_view_rounded, '/home'),
+    _NavItem('Notes', Icons.edit_note_rounded, '/notes'),
+    _NavItem('Progress', Icons.auto_graph_rounded, '/analytics'),
     _NavItem('Settings', Icons.settings_outlined, '/settings'),
   ];
   static const _workspaceItems = <_NavItem>[
-    _NavItem('Learning', Icons.play_circle_outline_rounded, '/learn'),
-    _NavItem('My Courses', Icons.library_books_outlined, '/courses'),
-    _NavItem('Dashboard', Icons.space_dashboard_outlined, '/home'),
+    _NavItem('Discover', Icons.explore_outlined, '/learn'),
+    _NavItem('My learning', Icons.menu_book_rounded, '/courses'),
+    _NavItem('Study plan', Icons.grid_view_rounded, '/home'),
     _NavItem('Calendar', Icons.calendar_month_outlined, '/calendar'),
     _NavItem('Daily Tasks', Icons.checklist_rounded, '/tasks'),
     _NavItem('Goals', Icons.flag_outlined, '/goals'),
     _NavItem('Notes', Icons.sticky_note_2_outlined, '/notes'),
     _NavItem('Habits', Icons.local_fire_department_outlined, '/habits'),
-    _NavItem('Analytics', Icons.insights_outlined, '/analytics'),
-    _NavItem('Achievements', Icons.emoji_events_outlined, '/badges'),
-    _NavItem('Employment', Icons.work_outline_rounded, '/career'),
+    _NavItem('Progress', Icons.auto_graph_rounded, '/analytics'),
+    _NavItem('Achievements', Icons.workspace_premium_outlined, '/badges'),
     _NavItem('Settings', Icons.settings_outlined, '/settings'),
   ];
   static const _mobileMoreItems = <_NavItem>[
@@ -114,31 +113,31 @@ class _Sidebar extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(22, 20, 16, 28),
+                padding: const EdgeInsets.fromLTRB(22, 24, 16, 30),
                 child: Row(children: [
                   Container(
                     width: 34,
                     height: 34,
                     decoration: BoxDecoration(
-                      color: AppColors.brandPink.withOpacity(.16),
-                      borderRadius: BorderRadius.circular(10),
+                      color: AppColors.brandPink,
+                      borderRadius: BorderRadius.circular(11),
                     ),
-                    child: const Icon(Icons.check_rounded,
-                        color: AppColors.brandPink, size: 21),
+                    child: const Icon(Icons.auto_awesome_rounded,
+                        color: Colors.white, size: 19),
                   ),
                   const SizedBox(width: 11),
                   const Text('dooet',
                       style: TextStyle(
-                        color: AppColors.textPrimary,
-                        fontSize: 19,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: -.4,
+                        color: AppColors.primaryDark,
+                        fontSize: 21,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: -.7,
                       )),
                 ]),
               ),
               const Padding(
                 padding: EdgeInsets.fromLTRB(20, 0, 16, 9),
-                child: Text('WORKSPACE',
+                child: Text('LEARNING SPACE',
                     style: TextStyle(
                       color: AppColors.textMuted,
                       fontSize: 10,
@@ -162,31 +161,26 @@ class _Sidebar extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
-                    onTap: () => showModalBottomSheet<void>(
-                      context: context,
-                      isScrollControlled: true,
-                      backgroundColor: Colors.transparent,
-                      builder: (_) => const _VoiceSheet(),
-                    ),
+                    onTap: () => context.go('/career'),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: AppColors.bgCard,
-                        border: Border.all(color: AppColors.border),
-                        borderRadius: BorderRadius.circular(12),
+                        color: AppColors.bgElevated,
+                        border: Border.all(color: AppColors.primary.withOpacity(.10)),
+                        borderRadius: BorderRadius.circular(14),
                       ),
                       padding: const EdgeInsets.all(13),
                       child: const Row(children: [
-                        Icon(Icons.mic_none_rounded,
-                            color: AppColors.secondary, size: 19),
+                        Icon(Icons.work_outline_rounded,
+                            color: AppColors.primary, size: 19),
                         SizedBox(width: 9),
                         Expanded(
-                            child: Text('Talk to Doeet',
+                            child: Text('Explore careers',
                                 style: TextStyle(
                                   color: AppColors.textSecondary,
                                   fontSize: 12,
                                 ))),
-                        Icon(Icons.arrow_forward_ios_rounded,
-                            color: AppColors.textMuted, size: 12),
+                        Icon(Icons.arrow_forward_rounded,
+                            color: AppColors.primary, size: 16),
                       ]),
                     ),
                   ),
@@ -303,8 +297,8 @@ class _Topbar extends StatelessWidget {
       'December'
     ];
     return Container(
-      height: 64,
-      padding: const EdgeInsets.symmetric(horizontal: 28),
+      height: 72,
+      padding: const EdgeInsets.symmetric(horizontal: 32),
       decoration: const BoxDecoration(
         color: AppColors.bgCard,
         border: Border(bottom: BorderSide(color: AppColors.border)),
@@ -313,8 +307,8 @@ class _Topbar extends StatelessWidget {
         Text(title,
             style: const TextStyle(
                 color: AppColors.textPrimary,
-                fontSize: 15,
-                fontWeight: FontWeight.w600)),
+                fontSize: 17,
+                fontWeight: FontWeight.w700)),
         const Spacer(),
         Text('${months[now.month - 1]} ${now.day}, ${now.year}',
             style: const TextStyle(
@@ -324,11 +318,12 @@ class _Topbar extends StatelessWidget {
         const SizedBox(width: 18),
         OutlinedButton.icon(
           onPressed: () => context.go('/career'),
-          icon: const Icon(Icons.work_outline_rounded, size: 17),
-          label: const Text('Employment'),
+          icon: const Icon(Icons.work_outline_rounded, size: 18),
+          label: const Text('Career space'),
           style: OutlinedButton.styleFrom(
-            foregroundColor: AppColors.textPrimary,
-            side: const BorderSide(color: AppColors.border),
+            foregroundColor: AppColors.primary,
+            backgroundColor: AppColors.bgElevated,
+            side: BorderSide(color: AppColors.primary.withOpacity(.12)),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           ),
         ),
