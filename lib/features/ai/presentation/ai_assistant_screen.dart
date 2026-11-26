@@ -59,7 +59,7 @@ class _AiAssistantScreenState extends ConsumerState<AiAssistantScreen> {
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('AI Doubt Assistant',
+                  const Text('Gemini Learning Tutor',
                       style: TextStyle(fontSize: 16)),
                   Text(
                     widget.courseTitle,
@@ -373,7 +373,7 @@ class _EmptyChat extends StatelessWidget {
           ).animate().scale(duration: 600.ms, curve: Curves.elasticOut),
           const SizedBox(height: 20),
           const Text(
-            'Ask me anything!',
+            'Ask Gemini anything!',
             style: TextStyle(
                 color: AppColors.textPrimary,
                 fontSize: 22,
@@ -381,7 +381,7 @@ class _EmptyChat extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'I\'m your AI tutor for $courseTitle',
+            'Your focused Gemini tutor for $courseTitle',
             style:
                 const TextStyle(color: AppColors.textSecondary, fontSize: 14),
             textAlign: TextAlign.center,
