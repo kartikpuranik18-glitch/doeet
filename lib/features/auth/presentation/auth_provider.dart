@@ -18,7 +18,7 @@ String authErrorMessage(Object error) {
       'email-already-in-use' => 'An account already exists for this email.',
       'weak-password' => 'Choose a stronger password (at least 6 characters).',
       'operation-not-allowed' =>
-        'This sign-in method is not enabled for this app.',
+        'Guest access is not enabled in Firebase Authentication yet. Enable the Anonymous provider and try again.',
       'too-many-requests' =>
         'Too many attempts. Wait a moment, then try again.',
       'network-request-failed' =>
