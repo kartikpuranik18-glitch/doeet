@@ -63,7 +63,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     state.whenOrNull(
       error: (e, _) => _showError(authErrorMessage(e)),
       data: (_) {
-        if (mounted) context.go('/home');
+        if (mounted) context.go('/learn');
       },
     );
   }
