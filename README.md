@@ -19,7 +19,7 @@ Employment data stays in `careerProfiles`, `resumes`, `applications`, and relate
 | 📺 Course Import | Paste YouTube playlist URL → auto-fetch all videos |
 | ▶️ Player | YouTube player with playback speed, focus mode, auto-progress |
 | 📝 Notes | Rich note editor with auto-save, per-video timestamps |
-| 🤖 AI Assistant | GPT-4o powered doubt chat with markdown rendering |
+| 🤖 Gemini Tutor | Gemini-powered doubt chat, notes, quizzes, and flashcards |
 | 🃏 Flashcards | AI-generated 3D flip flashcards |
 | 🧠 Quiz | AI-generated MCQ quiz with explanations |
 | 📊 Progress | Task completions by day and this week’s completion count |
@@ -32,7 +32,7 @@ Employment data stays in `careerProfiles`, `resumes`, `applications`, and relate
 - **Riverpod** — state management
 - **GoRouter** — navigation with shell routes
 - **Firebase** — Auth, Firestore, Storage
-- **OpenAI GPT-4o** — AI features
+- **Google Gemini Flash** — AI tutor and learning features, securely proxied through Firebase Functions
 - **YouTube Data API v3** — playlist import
 
 ---
@@ -79,14 +79,19 @@ add the Android SHA-1/SHA-256 fingerprints before testing Google login.
 3. Create an API key
 4. Keep the API key on a server, or restrict a development key by application and API in Google Cloud Console. Do not commit a production key or embed an unrestricted key in the Flutter app.
 
-#### OpenAI API Key
-1. Go to [OpenAI Platform](https://platform.openai.com)
-2. Create an API key
-
-Configure these integrations through a trusted backend for production. For local development only, pass restricted development keys at launch without committing them:
+#### Gemini API key
+1. Create a Gemini API key in [Google AI Studio](https://aistudio.google.com/app/apikey).
+2. Store it as a Firebase Functions secret — never add it to a Flutter `--dart-define` or commit it to the repository:
 
 ```bash
-flutter run --dart-define=YOUTUBE_API_KEY=your_key --dart-define=OPENAI_API_KEY=your_key
+firebase functions:secrets:set GEMINI_API_KEY
+firebase deploy --only functions
+```
+
+The `geminiTutor` callable function keeps the secret on the server and provides chat, notes, quizzes, and flashcards to authenticated learners. For local development only, pass restricted development keys at launch without committing them:
+
+```bash
+flutter run --dart-define=YOUTUBE_API_KEY=your_key
 ```
 
 The app intentionally fails with a clear configuration message when these values are absent. Never embed production secrets in a Flutter web or mobile build.
