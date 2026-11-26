@@ -200,6 +200,13 @@ class AuthRepository {
   // ─────────────────────────────────────────────────
 
   Future<UserModel> signInAsGuest() async {
+    // Reuse a guest session if the user taps the action again. This avoids
+    // producing an unnecessary anonymous account on every attempt.
+    final current = _auth.currentUser;
+    if (current != null && current.isAnonymous) {
+      final existing = await fetchUserModel(current.uid);
+      return existing ?? _buildNewUser(current, displayName: 'Guest Learner');
+    }
     final credential = await _auth.signInAnonymously();
 
     final firebaseUser = credential.user;
@@ -222,7 +229,13 @@ class AuthRepository {
       displayName: 'Guest Learner',
     );
 
-    await _saveNewUser(user);
+    // A guest can still explore even if a first-time profile write is delayed
+    // by a transient Firestore connection. Their authenticated Firebase
+    // session remains valid and the profile is created by userModelStream on
+    // the next successful connection.
+    try {
+      await _saveNewUser(user);
+    } catch (_) {}
 
     return user;
   }
