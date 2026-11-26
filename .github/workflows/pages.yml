@@ -37,8 +37,9 @@ jobs:
           flutter build web
           --release
           --base-href /doeet/
-          --dart-define=YOUTUBE_API_KEY=${{ secrets.YOUTUBE_API_KEY }}
-          --dart-define=OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+          firebase functions:secrets:AQ.Ab8RN6LdMWFPTE7dvPzJy0uBtgIknDiAY4bYeYKSL8hFoO_DkA--project doeetapp-c1e87
+          firebase deploy --only functions --project doeetapp-c1e87
+         
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
