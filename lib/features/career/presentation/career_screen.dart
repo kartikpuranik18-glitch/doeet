@@ -93,7 +93,7 @@ class _CareerScreenState extends ConsumerState<CareerScreen>
                 _CareerOverview(uid: uid),
                 _CertificatesTab(uid: uid),
                 _ResumeTab(uid: uid),
-                _JobsTab(uid: uid),
+                _PrototypeJobSearch(onApplied: () => _tabs.animateTo(4)),
                 _ApplicationsTab(uid: uid),
                 const _InterviewPrepTab(),
                 const _CareerInsightsTab(),
@@ -467,7 +467,7 @@ class _JobsTabState extends State<_JobsTab> {
         if (snapshot.hasError) {
           return const Center(child: Text('Jobs are unavailable.'));
         }
-        if (docs.isEmpty) return const _PrototypeJobSearch();
+        if (docs.isEmpty) return _PrototypeJobSearch(onApplied: () {});
         return ListView.separated(
           padding: const EdgeInsets.all(24),
           itemCount: docs.isEmpty ? 2 : docs.length + 1,
@@ -536,13 +536,15 @@ class _JobsTabState extends State<_JobsTab> {
 }
 
 class _PrototypeJobSearch extends StatefulWidget {
-  const _PrototypeJobSearch();
+  const _PrototypeJobSearch({required this.onApplied});
+  final VoidCallback onApplied;
   @override
   State<_PrototypeJobSearch> createState() => _PrototypeJobSearchState();
 }
 
 class _PrototypeJobSearchState extends State<_PrototypeJobSearch> {
   String query = '';
+  String filter = 'All roles';
   static const jobs = [
     ('Frontend Developer Intern', 'Nexora Labs', 'Bengaluru · Hybrid', '₹20k–₹30k/month', 'React · JavaScript · CSS', '32 applicants'),
     ('Junior Data Analyst', 'Northstar Analytics', 'Remote · India', '₹4.5L–₹6L/year', 'SQL · Excel · Power BI', '48 applicants'),
@@ -551,14 +553,20 @@ class _PrototypeJobSearchState extends State<_PrototypeJobSearch> {
   ];
   @override
   Widget build(BuildContext context) {
-    final visible = jobs.where((job) => '${job.$1} ${job.$2} ${job.$3} ${job.$4} ${job.$5} ${job.$6}'.toLowerCase().contains(query.toLowerCase())).toList();
+    final visible = jobs.where((job) {
+      final text = '${job.$1} ${job.$2} ${job.$3} ${job.$4} ${job.$5} ${job.$6}'.toLowerCase();
+      final matchesQuery = text.contains(query.toLowerCase());
+      final matchesFilter = filter == 'All roles' || (filter == 'Remote' && text.contains('remote')) || (filter == 'Internship' && (text.contains('intern') || text.contains('trainee'))) || (filter == 'Design' && text.contains('design'));
+      return matchesQuery && matchesFilter;
+    }).toList();
     return ListView(padding: const EdgeInsets.fromLTRB(28, 28, 28, 48), children: [
       const Text('Find your next role', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800)), const SizedBox(height: 7),
       const Text('Explore prototype job listings matched to your learning profile.', style: TextStyle(color: AppColors.textSecondary)), const SizedBox(height: 20),
       TextField(onChanged: (value) => setState(() => query = value), decoration: const InputDecoration(hintText: 'Search jobs, skills, companies or locations', prefixIcon: Icon(Icons.search_rounded))), const SizedBox(height: 14),
-      Wrap(spacing: 8, runSpacing: 8, children: const [Chip(label: Text('Remote')), Chip(label: Text('Internship')), Chip(label: Text('Entry level')), Chip(label: Text('Tech'))]), const SizedBox(height: 20),
+      Wrap(spacing: 8, runSpacing: 8, children: ['All roles', 'Remote', 'Internship', 'Design'].map((item) => ChoiceChip(label: Text(item), selected: filter == item, onSelected: (_) => setState(() => filter = item))).toList()), const SizedBox(height: 20),
       Text('${visible.length} recommended roles', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)), const SizedBox(height: 12),
-      for (final job in visible) _PrototypeJobCard(job: job),
+      if (visible.isEmpty) const Padding(padding: EdgeInsets.symmetric(vertical: 34), child: Center(child: Text('No roles match that search. Try another skill or filter.'))),
+      for (final job in visible) _PrototypeJobCard(job: job, onApplied: widget.onApplied),
       const SizedBox(height: 24), const Text('Recommended for you', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800)), const SizedBox(height: 8),
       const Text('Based on your React, SQL and Figma skills.', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)), const SizedBox(height: 12),
       const _CareerFeature(icon: Icons.auto_awesome_outlined, title: 'Build one more React project', detail: 'Portfolio evidence can improve your match for frontend roles.', stat: '+18% match'),
@@ -568,14 +576,14 @@ class _PrototypeJobSearchState extends State<_PrototypeJobSearch> {
 }
 
 class _PrototypeJobCard extends StatelessWidget {
-  const _PrototypeJobCard({required this.job});
+  const _PrototypeJobCard({required this.job, required this.onApplied});
   final (String, String, String, String, String, String) job;
+  final VoidCallback onApplied;
   @override
-  Widget build(BuildContext context) => Padding(padding: const EdgeInsets.only(bottom: 12), child: Container(padding: const EdgeInsets.all(19), decoration: BoxDecoration(color: AppColors.bgCard, border: Border.all(color: AppColors.border), borderRadius: BorderRadius.circular(16)), child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+  Widget build(BuildContext context) => Padding(padding: const EdgeInsets.only(bottom: 12), child: Container(padding: const EdgeInsets.all(19), decoration: BoxDecoration(color: AppColors.bgCard, border: Border.all(color: AppColors.border), borderRadius: BorderRadius.circular(16)), child: LayoutBuilder(builder: (context, constraints) { final actions = Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [FilledButton(onPressed: () { final alreadyApplied = _prototypeApplications.value.any((item) => item.role == job.$1 && item.company == job.$2); if (!alreadyApplied) { _prototypeApplications.value = [_PrototypeApplication(job.$1, job.$2, 'Applied', 'Application submitted just now'), ..._prototypeApplications.value]; } ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Application added to your tracker.'))); onApplied(); }, child: const Text('Apply now')), TextButton(onPressed: () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Job saved for later.'))), child: const Text('Save job'))]); final details = Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
     Container(width: 46, height: 46, decoration: BoxDecoration(color: AppColors.bgElevated, borderRadius: BorderRadius.circular(14)), child: const Icon(Icons.business_rounded, color: AppColors.primary)), const SizedBox(width: 14),
     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(job.$1, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800)), const SizedBox(height: 3), Text(job.$2, style: const TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.w600)), const SizedBox(height: 9), Text('${job.$3} · ${job.$4}', style: const TextStyle(color: AppColors.textSecondary, fontSize: 13)), const SizedBox(height: 7), Text(job.$5, style: const TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.w700)), const SizedBox(height: 6), Text(job.$6, style: const TextStyle(color: AppColors.textMuted, fontSize: 11))])),
-    const SizedBox(width: 10), Column(children: [FilledButton(onPressed: () { final alreadyApplied = _prototypeApplications.value.any((item) => item.role == job.$1 && item.company == job.$2); if (!alreadyApplied) { _prototypeApplications.value = [_PrototypeApplication(job.$1, job.$2, 'Applied', 'Application submitted just now'), ..._prototypeApplications.value]; } ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Application added to your tracker.'))); }, child: const Text('Apply')), const SizedBox(height: 5), TextButton(onPressed: () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Job saved for later.'))), child: const Text('Save'))]),
-  ])));
+  ]); return constraints.maxWidth < 560 ? Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [details, const SizedBox(height: 14), actions]) : Row(crossAxisAlignment: CrossAxisAlignment.start, children: [Expanded(child: details), const SizedBox(width: 14), SizedBox(width: 116, child: actions)]); })));
 }
 
 class _ApplicationsTab extends StatelessWidget {
